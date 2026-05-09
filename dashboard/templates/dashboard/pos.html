@@ -1,0 +1,332 @@
+{% extends 'dashboard/base.html' %}
+
+{% block header %}Boutique POS System{% endblock %}
+
+{% block content %}
+<div x-data="posSystem()" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+    <!-- Left Column: Products -->
+    <div class="xl:col-span-2 space-y-8">
+        <!-- Categories Filter -->
+        <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            <button 
+                @click="filterCategory('all')"
+                :class="activeCategory === 'all' ? 'bg-premium-gold text-white' : 'bg-white/50 text-slate-600'"
+                class="px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all shadow-sm">
+                All Collections
+            </button>
+            {% for category in categories %}
+            <button 
+                @click="filterCategory('{{ category.name }}')"
+                :class="activeCategory === '{{ category.name }}' ? 'bg-premium-gold text-white' : 'bg-white/50 text-slate-600'"
+                class="px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all shadow-sm">
+                {{ category.name }}
+            </button>
+            {% endfor %}
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="product in products" :key="product.id">
+                <div
+                    x-show="activeCategory === 'all' || activeCategory === product.category"
+                    class="glass-card glass-card-pink group overflow-hidden floating-md hover:scale-[1.04] transition-all duration-300">
+                    <div class="relative h-64 overflow-hidden">
+                        <template x-if="product.image">
+                            <img :src="product.image" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        </template>
+                        <template x-if="!product.image">
+                            <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
+                                <i data-lucide="image" class="w-12 h-12"></i>
+                            </div>
+                        </template>
+
+                        <template x-if="product.is_handmade">
+                            <span class="absolute top-4 left-4 px-3 py-1 glass-badge bg-premium-pink/80 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-widest border-white/40">Handmade</span>
+                        </template>
+
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                            <button
+                                @click="selectProduct(product)"
+                                class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-premium-gold shadow-xl hover:bg-premium-gold hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 floating-md">
+                                <i data-lucide="plus" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-[10px] font-bold text-premium-gold uppercase tracking-widest mb-1" x-text="product.category"></p>
+                        <h4 class="text-lg font-bold text-slate-800 playfair truncate" x-text="product.name"></h4>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-sm font-bold text-slate-500" x-text="'Variants: ' + product.variants.length"></span>
+                            <span class="text-lg font-bold text-premium-gold" x-text="'Rs. ' + (product.variants.length > 0 ? product.variants[0].price : '0.00')"></span>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Right Column: Cart & Checkout -->
+    <div class="space-y-8">
+        <div class="glass-card glass-card-blue flex flex-col sticky top-10 floating-sm">
+            <div class="p-6 border-b border-white/30 flex items-center justify-between bg-gradient-to-r from-blue-100/20 to-transparent">
+                <h4 class="text-xl font-bold text-slate-800 playfair">Current Cart</h4>
+                <span class="glass-badge px-3 py-1 bg-premium-pink/40 text-premium-gold text-[10px] font-bold rounded-full border-premium-pink/50" x-text="cart.length + ' Items'"></span>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="p-6 space-y-4 max-h-[50vh] overflow-y-auto scrollbar-hide">
+                <template x-if="cart.length === 0">
+                    <div class="py-10 flex flex-col items-center justify-center text-slate-400 opacity-50">
+                        <i data-lucide="shopping-basket" class="w-12 h-12 mb-2"></i>
+                        <p class="text-sm font-medium">Cart is empty</p>
+                    </div>
+                </template>
+
+                <template x-for="(item, index) in cart" :key="index">
+                    <div class="p-4 glass-card-pink rounded-2xl border border-white/40 flex flex-col gap-3 group hover:border-premium-pink/80 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0 pr-4">
+                                <h5 class="text-sm font-bold text-slate-700 truncate" x-text="item.name"></h5>
+                                <p class="text-[10px] text-slate-500 font-medium" x-text="item.variant + ' | ' + item.size"></p>
+                            </div>
+                            <button @click="removeFromCart(index)" class="text-slate-300 hover:text-red-400 transition-colors">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-white/20">
+                            <div class="flex items-center gap-4">
+                                <label class="flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" x-model="item.needs_stitching" class="w-3.5 h-3.5 rounded text-premium-gold focus:ring-premium-gold">
+                                    <span class="text-[10px] font-bold text-premium-gold uppercase tracking-widest">Stitching</span>
+                                </label>
+
+                                <template x-if="item.needs_stitching">
+                                    <div class="flex items-center gap-1 animate-fade-in">
+                                        <span class="text-[10px] font-bold text-slate-400">Rs.</span>
+                                        <input
+                                            type="number"
+                                            x-model="item.stitching_price"
+                                            placeholder="Fee"
+                                            class="glass-input w-20 px-2 py-1 text-xs font-bold"
+                                        >
+                                    </div>
+                                </template>
+                            </div>
+                            <span class="text-sm font-bold text-premium-gold" x-text="'Rs. ' + (parseFloat(item.price) + parseFloat(item.stitching_price || 0)).toFixed(2)"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Customer & Summary -->
+            <div class="p-6 bg-white/20 border-t border-white/30 space-y-4">
+                <div class="space-y-2">
+                    <input type="text" x-model="customer.name" placeholder="Customer Name (Optional)" class="glass-input w-full px-4 py-2 text-xs">
+                    <input type="text" x-model="customer.phone" placeholder="Phone Number (Optional)" class="glass-input w-full px-4 py-2 text-xs">
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <div class="flex justify-between text-xs font-semibold text-slate-500">
+                        <span>Subtotal</span>
+                        <span x-text="'Rs. ' + calculateSubtotal()"></span>
+                    </div>
+                    <div class="flex justify-between text-xs font-semibold text-slate-500">
+                        <span>Stitching Total</span>
+                        <span x-text="'Rs. ' + calculateStitchingTotal()"></span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold text-slate-800 pt-2 border-t border-white/20">
+                        <span class="playfair">Total Payable</span>
+                        <span class="text-premium-gold" x-text="'Rs. ' + calculateTotal()"></span>
+                    </div>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="glass-card-gold p-3 rounded-xl space-y-3 bg-white/30">
+                    <div class="flex items-center justify-between text-xs font-bold text-slate-600">
+                        <span>Payment Type</span>
+                        <div class="flex items-center gap-3">
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="radio" x-model="paymentType" value="full" class="text-premium-gold focus:ring-premium-gold">
+                                <span>Full</span>
+                            </label>
+                            <label class="flex items-center gap-1 cursor-pointer">
+                                <input type="radio" x-model="paymentType" value="partial" class="text-premium-gold focus:ring-premium-gold">
+                                <span>Partial</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div x-show="paymentType === 'partial'" class="animate-fade-in pt-2 border-t border-white/20">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="text-xs font-bold text-slate-500">Amount Paid:</span>
+                            <div class="flex items-center gap-1">
+                                <span class="text-xs font-bold text-slate-400">Rs.</span>
+                                <input type="number" x-model="amountPaid" placeholder="0.00" class="glass-input w-24 px-2 py-1 text-xs text-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    @click="checkout()"
+                    :disabled="cart.length === 0"
+                    class="w-full py-4 rounded-2xl btn-premium font-bold text-sm uppercase tracking-[0.2em] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed floating-sm">
+                    Complete Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Variant Selection Modal -->
+    <div x-show="showVariantModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-lg" x-cloak>
+        <div class="glass-card glass-card-pink w-full max-w-md p-8 bg-white/90 floating-lg" @click.away="showVariantModal = false">
+            <h3 class="text-2xl font-bold text-slate-800 playfair mb-6" x-text="'Select Variant: ' + selectedProduct.name"></h3>
+            <div class="space-y-6">
+                <p class="text-sm text-slate-500 mb-4">Please select the color and size for the item.</p>
+
+                <div class="space-y-4 max-h-60 overflow-y-auto pr-2">
+                    <template x-for="variant in selectedProduct.variants" :key="variant.id">
+                        <label class="flex items-center justify-between p-4 rounded-2xl glass-card border border-slate-200 hover:border-premium-gold hover:shadow-md cursor-pointer transition-all">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="variant" :value="variant.id" x-model="selectedVariantId" class="text-premium-gold focus:ring-premium-gold">
+                                <div class="w-12 h-12 rounded-lg overflow-hidden bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
+                                    <template x-if="variant.image || selectedProduct.image">
+                                        <img :src="variant.image || selectedProduct.image" class="w-full h-full object-cover">
+                                    </template>
+                                    <template x-if="!(variant.image || selectedProduct.image)">
+                                        <i data-lucide="image" class="w-6 h-6 text-slate-200"></i>
+                                    </template>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-700" x-text="variant.color + ' / ' + variant.size"></span>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold" x-text="'Stock: ' + variant.stock"></span>
+                                </div>
+                            </div>
+                            <span class="text-sm font-bold text-premium-gold" x-text="'Rs. ' + variant.price"></span>
+                        </label>
+                    </template>
+                </div>
+
+                <div class="flex gap-4 mt-8">
+                    <button @click="showVariantModal = false" class="flex-1 py-3 glass-card rounded-xl text-xs font-bold text-slate-500 uppercase tracking-widest hover:bg-white/40 transition-all">Cancel</button>
+                    <button
+                        @click="addToCart()"
+                        :disabled="!selectedVariantId"
+                        class="flex-1 py-3 bg-gradient-to-r from-premium-gold to-premium-pink rounded-xl text-xs font-bold text-white uppercase tracking-widest disabled:opacity-50 hover:shadow-lg transition-all floating-sm">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function posSystem() {
+    return {
+        products: {{ products_json|safe }},
+        activeCategory: 'all',
+        showVariantModal: false,
+        selectedProduct: { name: '', variants: [] },
+        selectedVariantId: null,
+        cart: [],
+        customer: { name: '', phone: '' },
+        paymentType: 'full',
+        amountPaid: '',
+        
+        filterCategory(category) {
+            this.activeCategory = category;
+        },
+
+        selectProduct(product) {
+            this.selectedProduct = product;
+            this.selectedVariantId = product.variants.length > 0 ? product.variants[0].id : null;
+            this.showVariantModal = true;
+        },
+
+        addToCart() {
+            const variant = this.selectedProduct.variants.find(v => v.id == this.selectedVariantId);
+            if (!variant) return;
+
+            this.cart.push({
+                product_id: this.selectedProduct.id,
+                variant_id: variant.id,
+                name: this.selectedProduct.name,
+                variant: variant.color,
+                size: variant.size,
+                price: variant.price,
+                image: variant.image || this.selectedProduct.image || 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=150',
+                needs_stitching: false,
+                stitching_price: 0,
+                quantity: 1
+            });
+            this.showVariantModal = false;
+            window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Item added to cart', type: 'success' } }));
+            this.$nextTick(() => lucide.createIcons());
+        },
+
+        removeFromCart(index) {
+            this.cart.splice(index, 1);
+        },
+
+        calculateSubtotal() {
+            return this.cart.reduce((acc, item) => acc + parseFloat(item.price), 0);
+        },
+
+        calculateStitchingTotal() {
+            return this.cart.reduce((acc, item) => acc + parseFloat(item.stitching_price || 0), 0);
+        },
+
+        calculateTotal() {
+            return (this.calculateSubtotal() + this.calculateStitchingTotal()).toFixed(2);
+        },
+
+        async checkout() {
+            if (this.cart.length === 0) return;
+
+            // Open window before async call to bypass popup blocker
+            const invoiceWindow = window.open('about:blank', '_blank');
+
+            try {
+                const response = await fetch('/checkout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        cart: this.cart,
+                        customer: this.customer,
+                        amount_paid: this.paymentType === 'partial' ? this.amountPaid : this.calculateTotal()
+                    })
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    window.dispatchEvent(new CustomEvent('toast', { 
+                        detail: { message: 'Order completed successfully! Token: ' + result.token, type: 'success' } 
+                    }));
+                    this.cart = [];
+                    this.customer = { name: '', phone: '' };
+                    
+                    // Set URL of the already opened window
+                    invoiceWindow.location.href = '/invoice/' + result.order_id + '/';
+                    
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    invoiceWindow.close();
+                    window.dispatchEvent(new CustomEvent('toast', { 
+                        detail: { message: 'Checkout failed: ' + result.message, type: 'error' } 
+                    }));
+                }
+            } catch (error) {
+                invoiceWindow.close();
+                console.error('Checkout error:', error);
+                window.dispatchEvent(new CustomEvent('toast', { 
+                    detail: { message: 'A system error occurred. Please check your inventory or server.', type: 'error' } 
+                }));
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

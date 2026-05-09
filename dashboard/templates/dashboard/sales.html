@@ -1,0 +1,79 @@
+{% extends 'dashboard/base.html' %}
+
+{% block header %}Sales Records{% endblock %}
+
+{% block content %}
+<div class="glass-card p-8 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="flex items-center gap-4 flex-1">
+        <div class="w-12 h-12 bg-premium-pink rounded-xl flex items-center justify-center text-premium-gold shadow-sm">
+            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <h4 class="text-xl font-bold text-slate-800 playfair">Sales & Order History</h4>
+            <p class="text-xs text-slate-500">View and manage past transactions.</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-white/40 border-b border-white/50 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                    <th class="p-6">Order Token</th>
+                    <th class="p-6">Date</th>
+                    <th class="p-6">Customer</th>
+                    <th class="p-6 text-right">Amount</th>
+                    <th class="p-6 text-center">Status</th>
+                    <th class="p-6 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/20">
+                {% for order in orders %}
+                <tr class="hover:bg-white/40 transition-colors">
+                    <td class="p-6 font-bold text-slate-700">{{ order.token_number }}</td>
+                    <td class="p-6 text-sm text-slate-600">{{ order.date|date:"M d, Y H:i" }}</td>
+                    <td class="p-6 text-sm text-slate-600">
+                        {{ order.customer.name|default:"Walk-in Customer" }}
+                        {% if order.customer and order.customer.phone %}
+                            <br><span class="text-[10px] text-slate-400">{{ order.customer.phone }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-6 text-right">
+                        <div class="font-bold text-premium-gold">Rs. {{ order.final_amount }}</div>
+                        {% if order.payment_status != 'Paid' %}
+                            <div class="text-[10px] text-red-400 font-bold uppercase tracking-widest mt-1">Due: Rs. {{ order.balance_due }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="p-6 text-center">
+                        {% if order.payment_status == 'Paid' %}
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Paid</span>
+                        {% elif order.payment_status == 'Partial' %}
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Partial</span>
+                        {% else %}
+                            <span class="px-3 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Unpaid</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-6 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            {% if order.customer and order.customer.phone %}
+                            <a href="https://wa.me/{{ order.customer.phone }}?text=Hello%20{{ order.customer.name|urlencode }},%20your%20order%20{{ order.product_names|urlencode }}%20is%20ready.%20Your%20remaining%20balance%20is%20Rs.%20{{ order.balance_due }}." target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-500 hover:bg-green-500 hover:text-white transition-all shadow-sm">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'invoice' order.id %}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white text-slate-400 hover:text-premium-gold hover:shadow-md transition-all">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="p-10 text-center text-slate-400 italic">No sales recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

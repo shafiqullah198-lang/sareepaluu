@@ -1,0 +1,85 @@
+{% extends 'dashboard/base.html' %}
+
+{% block header %}Manage Variants: {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Variant List -->
+    <div class="lg:col-span-2 space-y-6">
+        <div class="glass-card overflow-hidden">
+            <div class="p-8 border-b border-white/50">
+                <h4 class="text-xl font-bold text-slate-800 playfair">Existing Variants</h4>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-white/30 border-b border-white/50">
+                            <th class="px-8 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Image</th>
+                            <th class="px-8 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">SKU</th>
+                            <th class="px-8 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Color / Size</th>
+                            <th class="px-8 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Price</th>
+                            <th class="px-8 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Stock</th>
+                            <th class="px-8 py-4 text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/20">
+                        {% for variant in variants %}
+                        <tr class="hover:bg-white/20 transition-colors">
+                            <td class="px-8 py-4">
+                                {% if variant.image %}
+                                <img src="{{ variant.image.url }}" class="w-10 h-10 rounded-lg object-cover shadow-sm">
+                                {% else %}
+                                <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-200">
+                                    <i data-lucide="image" class="w-4 h-4"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-8 py-4 text-sm font-bold text-slate-700">{{ variant.sku }}</td>
+                            <td class="px-8 py-4 text-sm text-slate-600">{{ variant.color }} / {{ variant.size }}</td>
+                            <td class="px-8 py-4 text-sm font-bold text-premium-gold">Rs. {{ variant.price }}</td>
+                            <td class="px-8 py-4">
+                                <span class="px-3 py-1 {% if variant.stock < 10 %}bg-red-100 text-red-500{% else %}bg-green-100 text-green-600{% endif %} text-[10px] font-bold rounded-full uppercase">
+                                    {{ variant.stock }} In Stock
+                                </span>
+                            </td>
+                            <td class="px-8 py-4 text-right">
+                                <a href="{% url 'delete_variant' variant.pk %}" class="p-2 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-red-400">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-8 py-10 text-center text-slate-400 italic text-sm">No variants added yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <a href="{% url 'products' %}" class="inline-flex items-center gap-2 text-premium-gold font-bold text-sm hover:underline">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Back to Products
+        </a>
+    </div>
+
+    <!-- Add Variant Form -->
+    <div>
+        <div class="glass-card p-8">
+            <h4 class="text-lg font-bold text-slate-800 playfair mb-6">Add New Variant</h4>
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <button type="submit" class="w-full py-4 btn-premium rounded-2xl text-xs font-bold text-white uppercase tracking-widest shadow-lg mt-4">
+                    Add Variant
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Expense Management{% endblock %}
+
+{% block header %}Cash Flow & Expenses{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Cash Flow Summary -->
+    <div class="lg:col-span-1 space-y-6">
+        <div class="glass-card p-6 bg-gradient-to-br from-white/40 to-white/10">
+            <div class="flex flex-col gap-2 mb-6">
+                <h4 class="text-lg font-bold text-slate-800 playfair">Cash Flow Summary</h4>
+                <form method="GET" class="flex items-center gap-2">
+                    <select name="year" onchange="this.form.submit()" 
+                            class="bg-white/50 border-none rounded-lg text-[10px] font-bold text-slate-600 focus:ring-premium-gold/20 py-1.5 px-2">
+                        {% for y in year_range %}
+                        <option value="{{ y }}" {% if y == selected_year_val %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="month" name="month" value="{{ selected_month }}" 
+                           onchange="this.form.submit()"
+                           class="bg-white/50 border-none rounded-lg text-[10px] font-bold text-slate-600 focus:ring-premium-gold/20 py-1.5">
+                </form>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Today -->
+                <div class="p-4 bg-white/30 rounded-2xl border border-white/40 group hover:bg-white/50 transition-all">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Today's Flow</p>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 text-green-500 mb-1">
+                                <i data-lucide="arrow-down-left" class="w-3 h-3"></i>
+                                <span class="text-[10px] font-bold uppercase">Sales: Rs. {{ today_in|floatformat:0 }}</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-red-500">
+                                <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+                                <span class="text-[10px] font-bold uppercase">Expenses: Rs. {{ today_out|floatformat:0 }}</span>
+                            </div>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+                            <i data-lucide="activity" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly (Selected) -->
+                <div class="p-4 bg-white/30 rounded-2xl border border-white/40 group hover:bg-white/50 transition-all">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Monthly ({{ selected_month }})</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-green-600">Sales: Rs. {{ month_in|floatformat:0 }}</span>
+                            <span class="text-xs font-bold text-red-500">Expenses: Rs. {{ month_out|floatformat:0 }}</span>
+                        </div>
+                        <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500">
+                            <i data-lucide="calendar" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-white/40 flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Net Profit</span>
+                        <span class="text-sm font-bold {% if net_month >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                            Rs. {{ net_month|floatformat:0 }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Yearly -->
+                <div class="p-4 bg-white/30 rounded-2xl border border-white/40 group hover:bg-white/50 transition-all">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Annual Performance</p>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-green-600">Sales: Rs. {{ year_in|floatformat:0 }}</span>
+                            <span class="text-xs font-bold text-red-500">Expenses: Rs. {{ year_out|floatformat:0 }}</span>
+                        </div>
+                        <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-purple-500">
+                            <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-white/40 flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Yearly Balance</span>
+                        <span class="text-sm font-bold {% if net_year >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                            Rs. {{ net_year|floatformat:0 }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Expense Form -->
+        <div class="glass-card p-6">
+            <h4 class="text-lg font-bold text-slate-800 playfair mb-6">Record Expense</h4>
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <div class="space-y-4">
+                    {% for field in form %}
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <p class="text-[10px] text-red-500 mt-1">{{ field.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="w-full py-3 mt-4 btn-premium rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg">
+                    Record Transaction
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Logs -->
+    <div class="lg:col-span-2">
+        <div class="glass-card overflow-hidden h-full">
+            <div class="p-6 border-b border-white/40 flex items-center justify-between">
+                <h4 class="text-xl font-bold text-slate-800 playfair">Transaction History</h4>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Showing all logs</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="glass-table-header border-y border-white/40">
+                            <th class="px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date</th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Title/Category</th>
+                            <th class="px-6 py-4 text-right text-[10px] font-bold text-slate-400 uppercase tracking-widest">Amount</th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/20">
+                        {% for expense in expenses %}
+                        <tr class="glass-table-row">
+                            <td class="px-6 py-4">
+                                <span class="text-xs font-bold text-slate-600">{{ expense.date|date:"d M, Y" }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-slate-700">{{ expense.title }}</span>
+                                    <span class="text-[10px] text-premium-gold font-bold uppercase tracking-widest">{{ expense.category }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <span class="text-sm font-bold text-red-500">Rs. {{ expense.amount|floatformat:0 }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <p class="text-xs text-slate-500 italic truncate max-w-[150px]">{{ expense.description|default:"-" }}</p>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-10 text-center text-slate-400 italic">No transactions recorded.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

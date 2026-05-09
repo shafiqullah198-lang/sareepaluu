@@ -1,0 +1,191 @@
+{% extends 'dashboard/base.html' %}
+
+{% block header %}Inventory Management{% endblock %}
+
+{% block content %}
+<div class="glass-card p-8 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="flex items-center gap-4 flex-1">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500 shadow-sm">
+            <i data-lucide="database" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <h4 class="text-xl font-bold text-slate-800 playfair">Stock Control</h4>
+            <p class="text-xs text-slate-500">Click on any product to manage its variant stock levels.</p>
+        </div>
+    </div>
+</div>
+
+<div class="space-y-4" x-data="inventoryManager()">
+    {% for product in products %}
+    <div class="glass-card overflow-hidden transition-all duration-300" 
+         :class="expandedProduct === {{ product.id }} ? 'ring-2 ring-premium-gold/30 shadow-lg' : ''">
+        
+        <!-- Product Header -->
+        <div @click="toggleProduct({{ product.id }})" 
+             class="p-6 flex items-center justify-between cursor-pointer hover:bg-white/40 transition-colors">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden border border-white shrink-0">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-slate-400">
+                            <i data-lucide="image" class="w-6 h-6"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h5 class="font-bold text-slate-800">{{ product.name }}</h5>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
+                        {{ product.category.name|default:"No Category" }} • {{ product.variants.count }} Variants
+                    </p>
+                </div>
+            </div>
+            
+            <div class="text-slate-400 transition-transform duration-300"
+                 :class="expandedProduct === {{ product.id }} ? 'rotate-180 text-premium-gold' : ''">
+                <i data-lucide="chevron-down" class="w-6 h-6"></i>
+            </div>
+        </div>
+
+        <!-- Variants Table (Expanded Content) -->
+        <div x-show="expandedProduct === {{ product.id }}" x-collapse x-cloak>
+            <div class="border-t border-white/40 bg-white/20 p-6">
+                {% if product.variants.all %}
+                <div class="overflow-x-auto rounded-xl border border-white/50 bg-white/30">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/50 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                <th class="p-4">SKU</th>
+                                <th class="p-4">Color</th>
+                                <th class="p-4">Size</th>
+                                <th class="p-4 text-right">Price</th>
+                                <th class="p-4 text-center">Current Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/20">
+                            {% for variant in product.variants.all %}
+                            <tr class="hover:bg-white/40 transition-colors">
+                                <td class="p-4 text-sm font-bold text-slate-700">{{ variant.sku }}</td>
+                                <td class="p-4 text-sm text-slate-600">
+                                    <div class="flex items-center gap-2">
+                                        <!-- Optional: You can try to render a color swatch if you want -->
+                                        <span class="font-medium">{{ variant.color }}</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 text-sm font-bold text-slate-600">{{ variant.size }}</td>
+                                <td class="p-4 text-sm font-bold text-premium-gold text-right">Rs. {{ variant.price }}</td>
+                                <td class="p-4 text-center">
+                                    <div class="inline-flex items-center gap-2 bg-white px-2 py-1 rounded-lg shadow-sm border border-slate-100">
+                                        <button @click="updateStock({{ variant.id }}, -1)" class="w-6 h-6 rounded-md hover:bg-slate-100 text-slate-400 flex items-center justify-center transition-colors">
+                                            <i data-lucide="minus" class="w-3 h-3"></i>
+                                        </button>
+                                        <input type="number" 
+                                               x-model="stocks[{{ variant.id }}]" 
+                                               @change="saveStock({{ variant.id }})"
+                                               class="w-12 text-center text-sm font-bold text-slate-800 bg-transparent border-none focus:ring-0 p-0 hide-arrows">
+                                        <button @click="updateStock({{ variant.id }}, 1)" class="w-6 h-6 rounded-md hover:bg-slate-100 text-slate-400 flex items-center justify-center transition-colors">
+                                            <i data-lucide="plus" class="w-3 h-3"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center p-6 bg-white/30 rounded-xl border border-white/50 border-dashed">
+                    <p class="text-sm text-slate-500 font-medium">No variants added for this product yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="glass-card p-12 text-center">
+        <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mx-auto mb-4 shadow-sm border border-white">
+            <i data-lucide="package-x" class="w-8 h-8"></i>
+        </div>
+        <h4 class="text-lg font-bold text-slate-700 playfair mb-1">No Products Found</h4>
+        <p class="text-sm text-slate-500">Add products to your catalog to start tracking inventory.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    /* Hide number input arrows */
+    .hide-arrows::-webkit-outer-spin-button,
+    .hide-arrows::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .hide-arrows {
+        -moz-appearance: textfield;
+    }
+</style>
+
+<script>
+function inventoryManager() {
+    return {
+        expandedProduct: null,
+        stocks: {
+            {% for product in products %}
+                {% for variant in product.variants.all %}
+                    {{ variant.id }}: {{ variant.stock }},
+                {% endfor %}
+            {% endfor %}
+        },
+        
+        toggleProduct(id) {
+            if (this.expandedProduct === id) {
+                this.expandedProduct = null;
+            } else {
+                this.expandedProduct = id;
+            }
+        },
+        
+        updateStock(variantId, change) {
+            const currentStock = parseInt(this.stocks[variantId]) || 0;
+            const newStock = Math.max(0, currentStock + change);
+            if (newStock !== currentStock) {
+                this.stocks[variantId] = newStock;
+                this.saveStock(variantId);
+            }
+        },
+        
+        async saveStock(variantId) {
+            const newStock = parseInt(this.stocks[variantId]) || 0;
+            try {
+                const response = await fetch('/api/variant/stock/update/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        variant_id: variantId,
+                        stock: newStock
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    window.dispatchEvent(new CustomEvent('toast', {
+                        detail: { message: 'Stock updated successfully!', type: 'success' }
+                    }));
+                } else {
+                    window.dispatchEvent(new CustomEvent('toast', {
+                        detail: { message: data.message || 'Failed to update stock', type: 'error' }
+                    }));
+                }
+            } catch (error) {
+                console.error('Error updating stock:', error);
+                window.dispatchEvent(new CustomEvent('toast', {
+                    detail: { message: 'Network error occurred', type: 'error' }
+                }));
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

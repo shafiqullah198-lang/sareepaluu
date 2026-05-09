@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %}
+
+{% block header %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="glass-card p-10">
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 bg-premium-pink rounded-xl flex items-center justify-center text-premium-gold">
+                <i data-lucide="package-plus" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h4 class="text-xl font-bold text-slate-800 playfair">{{ title }}</h4>
+                <p class="text-xs text-slate-500">Update your luxury boutique catalog.</p>
+            </div>
+        </div>
+        
+        <div class="mb-8 p-4 bg-premium-pink/10 rounded-2xl border border-premium-pink/20">
+            <p class="text-xs text-slate-600 flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-premium-gold"></i>
+                <span><strong>Tip:</strong> Set an initial price and stock below. You can add more colors and sizes (variants) from the product list later.</span>
+            </p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="space-y-2">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                <p class="text-xs text-red-400 font-medium">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <datalist id="category_list_data">
+                {% for cat in all_categories %}
+                <option value="{{ cat.name }}">
+                {% endfor %}
+            </datalist>
+
+            <datalist id="subcategory_list_data">
+                {% for sub in all_subcategories %}
+                <option value="{{ sub.name }}">
+                {% endfor %}
+            </datalist>
+
+            <div class="flex gap-4 pt-6">
+                <a href="{% url 'products' %}" class="flex-1 py-4 bg-slate-100 rounded-2xl text-xs font-bold text-slate-500 text-center uppercase tracking-widest hover:bg-slate-200 transition-colors">Cancel</a>
+                <button type="submit" class="flex-1 py-4 btn-premium rounded-2xl text-xs font-bold text-white uppercase tracking-widest shadow-lg">Save Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

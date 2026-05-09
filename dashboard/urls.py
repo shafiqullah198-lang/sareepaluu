@@ -1,0 +1,29 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.dashboard_view, name='dashboard'),
+    path('pos/', views.pos_view, name='pos'),
+    path('checkout/', views.checkout, name='checkout'),
+    path('invoice/<int:order_id>/', views.invoice_view, name='invoice'),
+    path('sales/', views.sales_list, name='sales'),
+    path('customers/', views.customer_list, name='customers'),
+    path('inventory/', views.inventory_list, name='inventory'),
+    path('api/variant/stock/update/', views.update_variant_stock, name='update_variant_stock'),
+    path('api/notifications/', views.get_notifications_api, name='get_notifications_api'),
+    path('api/search/', views.global_search_api, name='global_search_api'),
+    path('products/', views.product_list, name='products'),
+    path('products/add/', views.add_product, name='add_product'),
+    path('products/edit/<int:pk>/', views.edit_product, name='edit_product'),
+    path('products/delete/<int:pk>/', views.delete_product, name='delete_product'),
+    path('products/<int:product_pk>/variants/', views.manage_variants, name='manage_variants'),
+    path('variants/delete/<int:pk>/', views.delete_variant, name='delete_variant'),
+    path('categories/', views.category_list, name='category_list'),
+    path('categories/delete/<int:pk>/', views.delete_category, name='delete_category'),
+    path('subcategories/delete/<int:pk>/', views.delete_subcategory, name='delete_subcategory'),
+    path('tailoring/', views.tailoring_view, name='tailoring'),
+    path('darzis/delete/<int:pk>/', views.delete_darzi, name='delete_darzi'),
+    path('stitching/update/<int:item_id>/', views.update_stitching_status, name='update_stitching_status'),
+    path('stitching/assign/<int:item_id>/', views.assign_darzi, name='assign_darzi'),
+    path('expenses/', views.expenses_view, name='expenses'),
+]

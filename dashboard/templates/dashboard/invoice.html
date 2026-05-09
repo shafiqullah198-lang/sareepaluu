@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - {{ order.token_number }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fae8ff 100%);
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        .glass-invoice {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 200, 220, 0.1) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(248, 200, 220, 0.6);
+            box-shadow:
+                0 25px 50px -15px rgba(183, 110, 121, 0.2),
+                0 0 30px rgba(248, 200, 220, 0.2),
+                inset 0 1px 2px rgba(255, 255, 255, 0.9);
+        }
+        .glass-header {
+            background: linear-gradient(135deg, rgba(248, 200, 220, 0.2) 0%, rgba(248, 200, 220, 0.05) 100%);
+            border: 1px solid rgba(248, 200, 220, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .glass-table-row {
+            border-bottom: 1px solid rgba(248, 200, 220, 0.2);
+        }
+        .glass-summary {
+            background: linear-gradient(135deg, rgba(183, 110, 121, 0.1) 0%, rgba(248, 200, 220, 0.1) 100%);
+            border: 1px solid rgba(183, 110, 121, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+        }
+        @media print {
+            body {
+                background: white;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .glass-invoice {
+                box-shadow: none !important;
+                border: 1px solid #e5e7eb !important;
+                padding: 0 !important;
+                background: white !important;
+                backdrop-filter: none;
+            }
+            .glass-header, .glass-summary {
+                background: #f9fafb !important;
+                border: 1px solid #e5e7eb !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-8 flex justify-center text-slate-800">
+    <div class="w-full max-w-3xl glass-invoice rounded-3xl p-10">
+        <!-- Header -->
+        <div class="glass-header flex justify-between items-start mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-premium-pink to-premium-gold rounded-xl flex items-center justify-center text-white shadow-lg">
+                    <i data-lucide="crown" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold playfair tracking-wide text-premium-gold">Boutique</h1>
+                    <p class="text-xs uppercase tracking-widest text-slate-500 font-bold">POS System</p>
+                </div>
+            </div>
+            <div class="text-right space-y-1">
+                <h2 class="text-xl font-bold text-slate-800 tracking-widest">INVOICE</h2>
+                <div class="flex items-center justify-end gap-2">
+                    <p class="text-sm font-bold text-premium-gold">#{{ order.token_number }}</p>
+                    {% if order.payment_status == 'Paid' %}
+                    <span class="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Paid</span>
+                    {% elif order.payment_status == 'Partial' %}
+                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Partial</span>
+                    {% else %}
+                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase tracking-wider">Unpaid</span>
+                    {% endif %}
+                </div>
+                <p class="text-sm text-slate-500">{{ order.date|date:"d M Y, h:i A" }}</p>
+            </div>
+        </div>
+
+        <!-- Customer details -->
+        <div class="mb-8">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Billed To</h3>
+            <p class="text-lg font-bold text-slate-700">{{ order.customer.name|default:"Walk-in Customer" }}</p>
+            {% if order.customer and order.customer.phone %}
+            <p class="text-sm text-slate-500">{{ order.customer.phone }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Items Table -->
+        <table class="w-full text-left mb-8">
+            <thead>
+                <tr class="glass-header border-b-2 border-premium-pink/40 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                    <th class="py-3">Item Description</th>
+                    <th class="py-3 text-center">Qty</th>
+                    <th class="py-3 text-right">Unit Price</th>
+                    <th class="py-3 text-right">Stitching</th>
+                    <th class="py-3 text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/40">
+                {% for item in order.items.all %}
+                <tr class="glass-table-row hover:bg-white/20 transition-colors">
+                    <td class="py-4">
+                        <p class="font-bold text-slate-700">{{ item.variant.product.name }}</p>
+                        <p class="text-xs text-slate-500">{{ item.variant.color }} | {{ item.variant.size }}</p>
+                    </td>
+                    <td class="py-4 text-center font-medium">{{ item.quantity }}</td>
+                    <td class="py-4 text-right font-medium">Rs. {{ item.price }}</td>
+                    <td class="py-4 text-right font-medium">
+                        {% if item.needs_stitching %}
+                            Rs. {{ item.stitching_price }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="py-4 text-right font-bold text-premium-gold">
+                        Rs. {{ item.total_price }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Summary -->
+        <div class="flex justify-end border-t border-slate-200 pt-6">
+            <div class="w-64 space-y-3">
+                <div class="flex justify-between text-sm font-bold text-slate-500">
+                    <span>Subtotal</span>
+                    <span>Rs. {{ order.total_amount }}</span>
+                </div>
+                {% if order.discount > 0 %}
+                <div class="flex justify-between text-sm font-bold text-slate-500">
+                    <span>Discount</span>
+                    <span>- Rs. {{ order.discount }}</span>
+                </div>
+                {% endif %}
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-sm font-bold text-slate-800">Total Amount</span>
+                    <span class="text-sm font-bold text-slate-800">Rs. {{ order.final_amount }}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm font-bold text-slate-500">
+                    <span>Amount Paid</span>
+                    <span class="text-green-600">Rs. {{ order.amount_paid }}</span>
+                </div>
+                <div class="flex justify-between items-center pt-4 border-t border-slate-200">
+                    <span class="text-lg font-bold text-slate-800 playfair">Balance Due</span>
+                    <span class="text-xl font-bold text-pink-600">Rs. {{ order.balance_due }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-16 text-center text-sm font-medium text-slate-400 border-t border-slate-100 pt-8">
+            <p>Thank you for your purchase!</p>
+            <p class="mt-1">Please keep this invoice for your records.</p>
+        </div>
+
+        <!-- Print Button -->
+        <div class="mt-8 flex justify-center gap-4 no-print">
+            <button onclick="window.print()" class="px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2 shadow-lg">
+                <i data-lucide="printer" class="w-4 h-4"></i> Print Invoice
+            </button>
+            <button onclick="window.close()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
+                Close
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
