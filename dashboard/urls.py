@@ -25,5 +25,7 @@ urlpatterns = [
     path('darzis/delete/<int:pk>/', views.delete_darzi, name='delete_darzi'),
     path('stitching/update/<int:item_id>/', views.update_stitching_status, name='update_stitching_status'),
     path('stitching/assign/<int:item_id>/', views.assign_darzi, name='assign_darzi'),
+    path('stitching/delivery-date/<int:item_id>/', views.update_delivery_date, name='update_delivery_date'),
     path('expenses/', views.expenses_view, name='expenses'),
+    path('api/order/payment/update/<int:order_id>/', views.update_payment, name='update_payment'),
 ]

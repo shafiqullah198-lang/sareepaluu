@@ -28,6 +28,8 @@
                             <td class="px-8 py-4">
                                 {% if variant.image %}
                                 <img src="{{ variant.image.url }}" class="w-10 h-10 rounded-lg object-cover shadow-sm">
+                                {% elif variant.product.image %}
+                                <img src="{{ variant.product.image.url }}" class="w-10 h-10 rounded-lg object-cover shadow-sm">
                                 {% else %}
                                 <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-200">
                                     <i data-lucide="image" class="w-4 h-4"></i>

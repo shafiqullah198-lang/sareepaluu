@@ -30,7 +30,7 @@
             </thead>
             <tbody class="divide-y divide-white/20">
                 {% for order in orders %}
-                <tr class="hover:bg-white/40 transition-colors">
+                <tr class="hover:bg-white/40 transition-colors" x-data="{ showPaymentModal: false, amount: '{{ order.balance_due|floatformat:0 }}', loading: false }">
                     <td class="p-6 font-bold text-slate-700">{{ order.token_number }}</td>
                     <td class="p-6 text-sm text-slate-600">{{ order.date|date:"M d, Y H:i" }}</td>
                     <td class="p-6 text-sm text-slate-600">
@@ -56,6 +56,12 @@
                     </td>
                     <td class="p-6 text-center">
                         <div class="flex items-center justify-center gap-2">
+                            {% if order.payment_status != 'Paid' %}
+                            <button @click="showPaymentModal = true" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-sm" title="Add Payment">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            </button>
+                            {% endif %}
+                            
                             {% if order.customer and order.customer.phone %}
                             <a href="https://wa.me/{{ order.customer.phone }}?text=Hello%20{{ order.customer.name|urlencode }},%20your%20order%20{{ order.product_names|urlencode }}%20is%20ready.%20Your%20remaining%20balance%20is%20Rs.%20{{ order.balance_due }}." target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-500 hover:bg-green-500 hover:text-white transition-all shadow-sm">
                                 <i data-lucide="message-circle" class="w-4 h-4"></i>
@@ -64,6 +70,58 @@
                             <a href="{% url 'invoice' order.id %}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white text-slate-400 hover:text-premium-gold hover:shadow-md transition-all">
                                 <i data-lucide="file-text" class="w-4 h-4"></i>
                             </a>
+                        </div>
+
+                        <!-- Add Payment Modal -->
+                        <div x-show="showPaymentModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" x-cloak x-transition>
+                            <div class="glass-card w-full max-w-md p-8 bg-white/95" @click.away="showPaymentModal = false">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h5 class="text-xl font-bold text-slate-800 playfair">Add Remaining Payment</h5>
+                                    <button @click="showPaymentModal = false" class="text-slate-400 hover:text-slate-600">
+                                        <i data-lucide="x" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="mb-6 text-left">
+                                    <p class="text-sm text-slate-500">Order: <span class="font-bold text-slate-700">#{{ order.token_number }}</span></p>
+                                    <p class="text-sm text-slate-500">Balance Due: <span class="font-bold text-red-500">Rs. {{ order.balance_due }}</span></p>
+                                </div>
+
+                                <div class="space-y-4 text-left">
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Additional Amount Paid</label>
+                                        <div class="relative">
+                                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">Rs.</span>
+                                            <input type="number" x-model="amount" class="w-full pl-12 pr-4 py-3 glass-input text-lg font-bold text-slate-700" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                    
+                                    <button 
+                                        @click="
+                                            loading = true;
+                                            fetch('/api/order/payment/update/{{ order.id }}/', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ amount: amount })
+                                            })
+                                            .then(r => r.json())
+                                            .then(data => {
+                                                if(data.status === 'success') {
+                                                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message, type: 'success' } }));
+                                                    setTimeout(() => window.location.reload(), 1000);
+                                                } else {
+                                                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: data.message, type: 'error' } }));
+                                                }
+                                            })
+                                            .finally(() => loading = false)
+                                        "
+                                        :disabled="loading || !amount || amount <= 0"
+                                        class="w-full py-4 btn-premium rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 disabled:opacity-50">
+                                        <span x-show="!loading">Confirm Payment</span>
+                                        <div x-show="loading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </tr>

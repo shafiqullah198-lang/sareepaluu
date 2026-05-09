@@ -3,32 +3,71 @@
 {% block header %}Boutique POS System{% endblock %}
 
 {% block content %}
-<div x-data="posSystem()" class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<div x-data="posSystem()" class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
     <!-- Left Column: Products -->
     <div class="xl:col-span-2 space-y-8">
         <!-- Categories Filter -->
-        <div class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
-            <button 
-                @click="filterCategory('all')"
-                :class="activeCategory === 'all' ? 'bg-premium-gold text-white' : 'bg-white/50 text-slate-600'"
-                class="px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all shadow-sm">
-                All Collections
-            </button>
-            {% for category in categories %}
-            <button 
-                @click="filterCategory('{{ category.name }}')"
-                :class="activeCategory === '{{ category.name }}' ? 'bg-premium-gold text-white' : 'bg-white/50 text-slate-600'"
-                class="px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all shadow-sm">
-                {{ category.name }}
-            </button>
-            {% endfor %}
+        <div class="space-y-6">
+            <!-- Search Bar (Full Width Above Categories) -->
+            <div class="glass-input px-6 py-4 flex items-center gap-4 w-full shadow-sm group focus-within:shadow-md transition-all duration-300">
+                <i data-lucide="search" class="w-5 h-5 text-slate-400 group-focus-within:text-premium-gold transition-colors"></i>
+                <input 
+                    type="text" 
+                    x-model="searchQuery" 
+                    @input.debounce.300ms="performSearch"
+                    placeholder="Search name, color, SKU..." 
+                    class="bg-transparent border-none focus:ring-0 focus:outline-none outline-none text-sm font-bold text-slate-700 w-full p-0 placeholder-slate-400 uppercase tracking-widest"
+                >
+            </div>
+
+            <!-- Categories Filter (Slidable) -->
+            <div class="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
+                <button 
+                    @click="filterCategory('all')"
+                    :class="activeCategory === 'all' ? 'bg-premium-gold text-white shadow-lg scale-105' : 'glass-input text-slate-600 hover:bg-white/40'"
+                    class="px-8 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex-shrink-0">
+                    All Collections
+                </button>
+                {% for category in categories %}
+                <button 
+                    @click="filterCategory('{{ category.name }}')"
+                    :class="activeCategory === '{{ category.name }}' ? 'bg-premium-gold text-white shadow-lg scale-105' : 'glass-input text-slate-600 hover:bg-white/40'"
+                    class="px-8 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex-shrink-0">
+                    {{ category.name }}
+                </button>
+                {% endfor %}
+            </div>
         </div>
+
+        <!-- Search Results: Partial Orders -->
+        <template x-if="searchResults.orders.length > 0">
+            <div class="space-y-4 animate-fade-in">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="alert-circle" class="w-5 h-5 text-red-400"></i>
+                    <h5 class="text-sm font-bold text-slate-800 uppercase tracking-widest">Pending Balance Orders</h5>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <template x-for="order in searchResults.orders" :key="order.id">
+                        <div class="glass-card border-red-200 bg-red-50/10 p-5 flex items-center justify-between group hover:border-red-400 transition-all">
+                            <div>
+                                <h6 class="text-sm font-bold text-slate-800" x-text="'Token: #' + order.title"></h6>
+                                <p class="text-[10px] text-slate-500 font-medium mt-1" x-text="order.subtitle"></p>
+                            </div>
+                            <button 
+                                @click="window.dispatchEvent(new CustomEvent('open-payment', { detail: order }))"
+                                class="px-4 py-2 bg-red-500 text-white text-[10px] font-bold rounded-xl uppercase tracking-widest shadow-lg hover:bg-red-600 transition-all floating-sm">
+                                Pay Now
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
 
         <!-- Product Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <template x-for="product in products" :key="product.id">
+            <template x-for="product in filteredProducts()" :key="product.id">
                 <div
-                    x-show="activeCategory === 'all' || activeCategory === product.category"
                     class="glass-card glass-card-pink group overflow-hidden floating-md hover:scale-[1.04] transition-all duration-300">
                     <div class="relative h-64 overflow-hidden">
                         <template x-if="product.image">
@@ -63,6 +102,15 @@
                 </div>
             </template>
         </div>
+
+        <!-- Empty State for Search -->
+        <template x-if="filteredProducts().length === 0">
+            <div class="py-20 glass-card flex flex-col items-center justify-center text-slate-400 opacity-60 animate-fade-in">
+                <i data-lucide="search-x" class="w-16 h-16 mb-4"></i>
+                <p class="text-lg font-bold italic">No products match your search or category.</p>
+                <button @click="searchQuery = ''; activeCategory = 'all'" class="mt-4 text-premium-gold font-bold text-xs uppercase tracking-widest hover:underline">Clear all filters</button>
+            </div>
+        </template>
     </div>
 
     <!-- Right Column: Cart & Checkout -->
@@ -185,7 +233,7 @@
                 <p class="text-sm text-slate-500 mb-4">Please select the color and size for the item.</p>
 
                 <div class="space-y-4 max-h-60 overflow-y-auto pr-2">
-                    <template x-for="variant in selectedProduct.variants" :key="variant.id">
+                    <template x-for="variant in selectedProduct.variants.filter(v => !searchQuery || selectedProduct.name.toLowerCase().includes(searchQuery.toLowerCase()) || (v.color && v.color.toLowerCase().includes(searchQuery.toLowerCase())) || (v.sku && v.sku.toLowerCase().includes(searchQuery.toLowerCase())))" :key="variant.id">
                         <label class="flex items-center justify-between p-4 rounded-2xl glass-card border border-slate-200 hover:border-premium-gold hover:shadow-md cursor-pointer transition-all">
                             <div class="flex items-center gap-3">
                                 <input type="radio" name="variant" :value="variant.id" x-model="selectedVariantId" class="text-premium-gold focus:ring-premium-gold">
@@ -226,6 +274,7 @@ function posSystem() {
     return {
         products: {{ products_json|safe }},
         activeCategory: 'all',
+        searchQuery: '',
         showVariantModal: false,
         selectedProduct: { name: '', variants: [] },
         selectedVariantId: null,
@@ -233,6 +282,34 @@ function posSystem() {
         customer: { name: '', phone: '' },
         paymentType: 'full',
         amountPaid: '',
+        searchResults: { products: [], orders: [] },
+        
+        async performSearch() {
+            if (this.searchQuery.length < 2) {
+                this.searchResults = { products: [], orders: [] };
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/search/?q=${encodeURIComponent(this.searchQuery)}`);
+                const data = await response.json();
+                this.searchResults = {
+                    products: data.results.filter(r => r.type === 'Product' || r.type === 'Variant'),
+                    orders: data.results.filter(r => r.type === 'Order' && r.payment_status !== 'Paid')
+                };
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        
+        filteredProducts() {
+            return this.products.filter(product => {
+                const matchesCategory = this.activeCategory === 'all' || product.category === this.activeCategory;
+                const q = this.searchQuery.toLowerCase();
+                if (!q) return matchesCategory;
+                return matchesCategory && product.name.toLowerCase().includes(q);
+            });
+        },
         
         filterCategory(category) {
             this.activeCategory = category;

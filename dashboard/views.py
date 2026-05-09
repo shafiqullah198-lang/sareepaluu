@@ -1,10 +1,11 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import models
 from django.db.models import Sum, Count
 from django.utils import timezone
 from datetime import timedelta, date
 from django.db.models.functions import TruncDate
-from .models import Order, Product, Category, ProductVariant, Customer, OrderItem, Darzi, SubCategory, Expense
+from .models import Order, Product, Category, ProductVariant, Customer, OrderItem, Darzi, SubCategory, Expense, OrderPayment
 from .forms import ProductForm, VariantForm, CategoryForm, SubCategoryForm, DarziForm, ExpenseForm
 import json
 from django.http import JsonResponse
@@ -139,6 +140,7 @@ def pos_view(request):
         for v in p.variants.all():
             variants.append({
                 'id': v.id,
+                'sku': v.sku,
                 'color': v.color,
                 'size': v.size,
                 'price': float(v.price),
@@ -179,7 +181,9 @@ def checkout(request):
             )
         
         # Generate token
-        token = f"TK-{timezone.now().strftime('%Y%m%d%H%M%S')}"
+        last_order = Order.objects.order_by('id').last()
+        next_id = (last_order.id + 1) if last_order else 1
+        token = f"INV-{next_id:03d}"
         
         # Create Order
         order = Order.objects.create(
@@ -230,6 +234,14 @@ def checkout(request):
             
         order.save()
         
+        # Record initial payment
+        if order.amount_paid > 0:
+            OrderPayment.objects.create(
+                order=order,
+                amount=order.amount_paid,
+                note="Initial Payment"
+            )
+        
         return JsonResponse({'status': 'success', 'token': token, 'order_id': order.id})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
@@ -278,14 +290,22 @@ def global_search_api(request):
             'url': f"/sales/" # Fallback to sales for customer view
         })
         
-    # 4. Search Orders by customer name or token
-    orders = Order.objects.filter(models.Q(customer__name__icontains=q) | models.Q(token_number__icontains=q))[:5]
+    # 4. Search Orders by customer name, token, or product name
+    orders = Order.objects.filter(
+        models.Q(customer__name__icontains=q) | 
+        models.Q(token_number__icontains=q) |
+        models.Q(items__variant__product__name__icontains=q)
+    ).distinct()[:5]
+    
     for o in orders:
         results.append({
             'type': 'Order',
+            'id': o.id,
             'title': o.token_number,
-            'subtitle': o.customer.name if o.customer else 'Walk-in',
-            'url': f"/invoice/{o.id}/"
+            'subtitle': f"{o.customer.name if o.customer else 'Walk-in'} | Rs. {o.balance_due} Due",
+            'url': f"/invoice/{o.id}/",
+            'payment_status': o.payment_status,
+            'balance_due': float(o.balance_due)
         })
         
     return JsonResponse({'results': results})
@@ -560,3 +580,61 @@ def assign_darzi(request, item_id):
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
 
+@csrf_exempt
+def update_delivery_date(request, item_id):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            delivery_date = data.get('delivery_date')
+            item = OrderItem.objects.get(id=item_id)
+            if delivery_date:
+                item.delivery_date = delivery_date
+            else:
+                item.delivery_date = None
+            item.save()
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def update_payment(request, order_id):
+    if request.method == 'POST':
+        try:
+            order = get_object_or_404(Order, id=order_id)
+            data = json.loads(request.body)
+            additional_amount = Decimal(str(data.get('amount', 0)))
+            
+            if additional_amount <= 0:
+                return JsonResponse({'status': 'error', 'message': 'Amount must be greater than zero'})
+                
+            if additional_amount > order.balance_due:
+                return JsonResponse({'status': 'error', 'message': f'Amount exceeds balance due (Rs. {order.balance_due})'})
+                
+            order.amount_paid += additional_amount
+            
+            if order.amount_paid >= order.final_amount:
+                order.payment_status = 'Paid'
+            elif order.amount_paid > 0:
+                order.payment_status = 'Partial'
+            else:
+                order.payment_status = 'Unpaid'
+                
+            order.save()
+            
+            # Record installment payment
+            OrderPayment.objects.create(
+                order=order,
+                amount=additional_amount,
+                note="Installment Payment"
+            )
+            
+            return JsonResponse({
+                'status': 'success', 
+                'message': f'Payment of Rs. {additional_amount} added successfully!',
+                'new_balance': float(order.balance_due),
+                'new_status': order.payment_status
+            })
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)

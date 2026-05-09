@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='utf8'?>
+<nuitka-compilation-report nuitka_version="4.0.8" nuitka_commercial_version="not installed" mode="onefile" completion="error exit message (1)" exit_message="pywebview: Conflict between user and plugin decision for module 'webview.platforms.android'.">
+  <performance>
+    <memory_usage name="after_launch" value="43372544" />
+  </performance>
+  <data_file name="staticfiles\admin\css\autocomplete.css" source="${cwd}\staticfiles\admin\css\autocomplete.css" size="9185" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\base.css" source="${cwd}\staticfiles\admin\css\base.css" size="23100" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\changelists.css" source="${cwd}\staticfiles\admin\css\changelists.css" size="7498" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\dark_mode.css" source="${cwd}\staticfiles\admin\css\dark_mode.css" size="3538" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\dashboard.css" source="${cwd}\staticfiles\admin\css\dashboard.css" size="441" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\forms.css" source="${cwd}\staticfiles\admin\css\forms.css" size="8831" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\login.css" source="${cwd}\staticfiles\admin\css\login.css" size="951" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\nav_sidebar.css" source="${cwd}\staticfiles\admin\css\nav_sidebar.css" size="2810" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\responsive.css" source="${cwd}\staticfiles\admin\css\responsive.css" size="16273" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\responsive_rtl.css" source="${cwd}\staticfiles\admin\css\responsive_rtl.css" size="2157" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\rtl.css" source="${cwd}\staticfiles\admin\css\rtl.css" size="4779" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\unusable_password_field.css" source="${cwd}\staticfiles\admin\css\unusable_password_field.css" size="663" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\widgets.css" source="${cwd}\staticfiles\admin\css\widgets.css" size="11811" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\vendor\select2\LICENSE-SELECT2.md" source="${cwd}\staticfiles\admin\css\vendor\select2\LICENSE-SELECT2.md" size="1124" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\vendor\select2\select2.css" source="${cwd}\staticfiles\admin\css\vendor\select2\select2.css" size="17358" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\css\vendor\select2\select2.min.css" source="${cwd}\staticfiles\admin\css\vendor\select2\select2.min.css" size="14966" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\README.md" source="${cwd}\staticfiles\admin\img\README.md" size="3022" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\calendar-icons.svg" source="${cwd}\staticfiles\admin\img\calendar-icons.svg" size="1320" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-addlink.svg" source="${cwd}\staticfiles\admin\img\icon-addlink.svg" size="593" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-alert-dark.svg" source="${cwd}\staticfiles\admin\img\icon-alert-dark.svg" size="684" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-alert.svg" source="${cwd}\staticfiles\admin\img\icon-alert.svg" size="684" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-calendar.svg" source="${cwd}\staticfiles\admin\img\icon-calendar.svg" size="1112" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-changelink.svg" source="${cwd}\staticfiles\admin\img\icon-changelink.svg" size="978" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-clock.svg" source="${cwd}\staticfiles\admin\img\icon-clock.svg" size="805" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-debug-dark.svg" source="${cwd}\staticfiles\admin\img\icon-debug-dark.svg" size="1247" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-debug.svg" source="${cwd}\staticfiles\admin\img\icon-debug.svg" size="1247" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-deletelink.svg" source="${cwd}\staticfiles\admin\img\icon-deletelink.svg" size="689" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-hidelink.svg" source="${cwd}\staticfiles\admin\img\icon-hidelink.svg" size="1131" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-info-dark.svg" source="${cwd}\staticfiles\admin\img\icon-info-dark.svg" size="630" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-info.svg" source="${cwd}\staticfiles\admin\img\icon-info.svg" size="630" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-no-dark.svg" source="${cwd}\staticfiles\admin\img\icon-no-dark.svg" size="645" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-no.svg" source="${cwd}\staticfiles\admin\img\icon-no.svg" size="645" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-unknown-alt.svg" source="${cwd}\staticfiles\admin\img\icon-unknown-alt.svg" size="806" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-unknown.svg" source="${cwd}\staticfiles\admin\img\icon-unknown.svg" size="806" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-viewlink.svg" source="${cwd}\staticfiles\admin\img\icon-viewlink.svg" size="928" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-yes-dark.svg" source="${cwd}\staticfiles\admin\img\icon-yes-dark.svg" size="558" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\icon-yes.svg" source="${cwd}\staticfiles\admin\img\icon-yes.svg" size="558" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\inline-delete.svg" source="${cwd}\staticfiles\admin\img\inline-delete.svg" size="651" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\search.svg" source="${cwd}\staticfiles\admin\img\search.svg" size="607" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\selector-icons.svg" source="${cwd}\staticfiles\admin\img\selector-icons.svg" size="2387" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\sorting-icons.svg" source="${cwd}\staticfiles\admin\img\sorting-icons.svg" size="1761" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\tooltag-add.svg" source="${cwd}\staticfiles\admin\img\tooltag-add.svg" size="593" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\img\tooltag-arrowright.svg" source="${cwd}\staticfiles\admin\img\tooltag-arrowright.svg" size="569" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\SelectBox.js" source="${cwd}\staticfiles\admin\js\SelectBox.js" size="4530" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\SelectFilter2.js" source="${cwd}\staticfiles\admin\js\SelectFilter2.js" size="16428" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\actions.js" source="${cwd}\staticfiles\admin\js\actions.js" size="8076" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\autocomplete.js" source="${cwd}\staticfiles\admin\js\autocomplete.js" size="1060" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\calendar.js" source="${cwd}\staticfiles\admin\js\calendar.js" size="9159" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\cancel.js" source="${cwd}\staticfiles\admin\js\cancel.js" size="884" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\change_form.js" source="${cwd}\staticfiles\admin\js\change_form.js" size="606" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\core.js" source="${cwd}\staticfiles\admin\js\core.js" size="6208" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\filters.js" source="${cwd}\staticfiles\admin\js\filters.js" size="978" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\inlines.js" source="${cwd}\staticfiles\admin\js\inlines.js" size="15628" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\jquery.init.js" source="${cwd}\staticfiles\admin\js\jquery.init.js" size="347" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\nav_sidebar.js" source="${cwd}\staticfiles\admin\js\nav_sidebar.js" size="3063" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\popup_response.js" source="${cwd}\staticfiles\admin\js\popup_response.js" size="532" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\prepopulate.js" source="${cwd}\staticfiles\admin\js\prepopulate.js" size="1531" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\prepopulate_init.js" source="${cwd}\staticfiles\admin\js\prepopulate_init.js" size="586" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\theme.js" source="${cwd}\staticfiles\admin\js\theme.js" size="1653" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\urlify.js" source="${cwd}\staticfiles\admin\js\urlify.js" size="7887" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\admin\DateTimeShortcuts.js" source="${cwd}\staticfiles\admin\js\admin\DateTimeShortcuts.js" size="19698" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\admin\RelatedObjectLookups.js" source="${cwd}\staticfiles\admin\js\admin\RelatedObjectLookups.js" size="9777" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\jquery\LICENSE.txt" source="${cwd}\staticfiles\admin\js\vendor\jquery\LICENSE.txt" size="1097" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\jquery\jquery.js" source="${cwd}\staticfiles\admin\js\vendor\jquery\jquery.js" size="285314" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\jquery\jquery.min.js" source="${cwd}\staticfiles\admin\js\vendor\jquery\jquery.min.js" size="87533" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\LICENSE.md" source="${cwd}\staticfiles\admin\js\vendor\select2\LICENSE.md" size="1124" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\select2.full.js" source="${cwd}\staticfiles\admin\js\vendor\select2\select2.full.js" size="173566" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\select2.full.min.js" source="${cwd}\staticfiles\admin\js\vendor\select2\select2.full.min.js" size="79212" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\af.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\af.js" size="866" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ar.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ar.js" size="905" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\az.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\az.js" size="721" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\bg.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\bg.js" size="968" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\bn.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\bn.js" size="1291" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\bs.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\bs.js" size="965" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ca.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ca.js" size="900" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\cs.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\cs.js" size="1292" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\da.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\da.js" size="828" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\de.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\de.js" size="866" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\dsb.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\dsb.js" size="1017" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\el.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\el.js" size="1182" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\en.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\en.js" size="844" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\es.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\es.js" size="922" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\et.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\et.js" size="801" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\eu.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\eu.js" size="868" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\fa.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\fa.js" size="1023" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\fi.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\fi.js" size="803" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\fr.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\fr.js" size="924" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\gl.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\gl.js" size="924" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\he.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\he.js" size="984" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\hi.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\hi.js" size="1175" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\hr.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\hr.js" size="852" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\hsb.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\hsb.js" size="1018" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\hu.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\hu.js" size="831" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\hy.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\hy.js" size="1028" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\id.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\id.js" size="768" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\is.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\is.js" size="807" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\it.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\it.js" size="897" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ja.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ja.js" size="862" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ka.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ka.js" size="1195" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\km.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\km.js" size="1088" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ko.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ko.js" size="855" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\lt.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\lt.js" size="944" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\lv.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\lv.js" size="900" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\mk.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\mk.js" size="1038" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ms.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ms.js" size="811" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\nb.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\nb.js" size="778" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ne.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ne.js" size="1357" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\nl.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\nl.js" size="904" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\pl.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\pl.js" size="947" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ps.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ps.js" size="1049" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\pt-BR.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\pt-BR.js" size="876" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\pt.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\pt.js" size="878" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ro.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ro.js" size="938" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\ru.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\ru.js" size="1171" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\sk.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\sk.js" size="1306" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\sl.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\sl.js" size="925" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\sq.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\sq.js" size="903" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\sr-Cyrl.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\sr-Cyrl.js" size="1109" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\sr.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\sr.js" size="980" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\sv.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\sv.js" size="786" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\th.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\th.js" size="1074" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\tk.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\tk.js" size="771" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\tr.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\tr.js" size="775" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\uk.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\uk.js" size="1156" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\vi.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\vi.js" size="796" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\zh-CN.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\zh-CN.js" size="768" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\select2\i18n\zh-TW.js" source="${cwd}\staticfiles\admin\js\vendor\select2\i18n\zh-TW.js" size="707" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\xregexp\LICENSE.txt" source="${cwd}\staticfiles\admin\js\vendor\xregexp\LICENSE.txt" size="1106" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\xregexp\xregexp.js" source="${cwd}\staticfiles\admin\js\vendor\xregexp\xregexp.js" size="325171" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\admin\js\vendor\xregexp\xregexp.min.js" source="${cwd}\staticfiles\admin\js\vendor\xregexp\xregexp.min.js" size="163184" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\images\sbp_logo.png" source="${cwd}\staticfiles\images\sbp_logo.png" size="1977163" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="staticfiles\src\input.css" source="${cwd}\staticfiles\src\input.css" size="2971" reason="specified data dir 'staticfiles' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\base.html" source="${cwd}\dashboard\templates\dashboard\base.html" size="30509" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\categories.html" source="${cwd}\dashboard\templates\dashboard\categories.html" size="3955" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\customers.html" source="${cwd}\dashboard\templates\dashboard\customers.html" size="4069" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\darzi.html" source="${cwd}\dashboard\templates\dashboard\darzi.html" size="5447" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\expenses.html" source="${cwd}\dashboard\templates\dashboard\expenses.html" size="9643" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\index.html" source="${cwd}\dashboard\templates\dashboard\index.html" size="15344" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\inventory.html" source="${cwd}\dashboard\templates\dashboard\inventory.html" size="10225" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\invoice.html" source="${cwd}\dashboard\templates\dashboard\invoice.html" size="10207" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\manage_variants.html" source="${cwd}\dashboard\templates\dashboard\manage_variants.html" size="5085" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\pos.html" source="${cwd}\dashboard\templates\dashboard\pos.html" size="21278" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\product_form.html" source="${cwd}\dashboard\templates\dashboard\product_form.html" size="2519" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\products.html" source="${cwd}\dashboard\templates\dashboard\products.html" size="4980" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\sales.html" source="${cwd}\dashboard\templates\dashboard\sales.html" size="4717" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\stitching.html" source="${cwd}\dashboard\templates\dashboard\stitching.html" size="9610" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_file name="dashboard\templates\dashboard\tailoring.html" source="${cwd}\dashboard\templates\dashboard\tailoring.html" size="16688" reason="specified data dir 'dashboard\templates' on command line" tags="user,copy,data-dir-contents" />
+  <data_composer blob_size="None" />
+  <command_line>
+    <option value="--onefile" />
+    <option value="--standalone" />
+    <option value="--windows-disable-console" />
+    <option value="--windows-icon-from-ico=logo.ico" />
+    <option value="--include-data-dir=staticfiles=staticfiles" />
+    <option value="--include-data-dir=dashboard/templates=dashboard/templates" />
+    <option value="--include-package=django" />
+    <option value="--include-package=whitenoise" />
+    <option value="--include-package=waitress" />
+    <option value="--include-package=webview" />
+    <option value="--include-package=pythonnet" />
+    <option value="--output-dir=build" />
+    <option value="launcher.py" />
+  </command_line>
+  <plugins>
+    <plugin name="anti-bloat" user_enabled="no" />
+    <plugin name="data-files" user_enabled="no" />
+    <plugin name="delvewheel" user_enabled="no" />
+    <plugin name="dll-files" user_enabled="no" />
+    <plugin name="eventlet" user_enabled="no" />
+    <plugin name="gevent" user_enabled="no" />
+    <plugin name="gi" user_enabled="no" />
+    <plugin name="glfw" user_enabled="no" />
+    <plugin name="implicit-imports" user_enabled="no" />
+    <plugin name="kivy" user_enabled="no" />
+    <plugin name="matplotlib" user_enabled="no" />
+    <plugin name="multiprocessing" user_enabled="no" />
+    <plugin name="options-nanny" user_enabled="no" />
+    <plugin name="pbr-compat" user_enabled="no" />
+    <plugin name="pkg-resources" user_enabled="no" />
+    <plugin name="playwright" user_enabled="no" />
+    <plugin name="pywebview" user_enabled="no" />
+    <plugin name="spacy" user_enabled="no" />
+    <plugin name="transformers" user_enabled="no" />
+  </plugins>
+  <onefile cache_mode="temporary" unpack_dir="{TEMP}\onefile_{PID}_{TIME}" />
+  <distributions />
+  <python python_exe="${sys.prefix}\Scripts\python.exe" python_flavor="CPython Official" python_version="3.11.5" os_name="Windows" os_release="11" arch_name="x86_64" filesystem_encoding="utf-8">
+    <search_path>
+      <path value="${cwd}" />
+      <path value="${sys.real_prefix}\DLLs" />
+      <path value="${sys.real_prefix}\Lib" />
+      <path value="${sys.real_prefix}" />
+      <path value="${sys.prefix}" />
+      <path value="${sys.prefix}\Lib\site-packages" />
+    </search_path>
+  </python>
+  <output run_filename="${cwd}\build\launcher.exe" />
+</nuitka-compilation-report>

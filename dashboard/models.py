@@ -108,6 +108,15 @@ class OrderItem(models.Model):
     def total_price(self):
         return (self.price * self.quantity) + self.stitching_price
 
+class OrderPayment(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='payments')
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    date = models.DateTimeField(default=timezone.now)
+    note = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.order.token_number} - Rs. {self.amount}"
+
 class Expense(models.Model):
     CATEGORY_CHOICES = [
         ('Utilities', 'Utilities'),

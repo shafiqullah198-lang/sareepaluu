@@ -90,7 +90,10 @@
                             <td class="px-8 py-6">
                                 <div class="flex items-center gap-2 text-xs font-bold text-slate-700">
                                     <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
-                                    {{ order.delivery_date|date:"d M, Y"|default:"Not Set" }}
+                                    <input type="date" 
+                                           value="{{ order.delivery_date|date:'Y-m-d' }}" 
+                                           @change="updateDeliveryDate({{ order.id }}, $event.target.value)"
+                                           class="bg-transparent border-none p-0 focus:ring-0 text-xs font-bold text-slate-700 cursor-pointer hover:text-premium-gold transition-colors">
                                 </div>
                             </td>
                             <td class="px-8 py-6">
@@ -251,6 +254,21 @@ function stitchingManager() {
             } catch (error) {
                 console.error('Assignment error:', error);
                 window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Failed to assign tailor', type: 'error' } }));
+            }
+        },
+        async updateDeliveryDate(itemId, date) {
+            try {
+                const response = await fetch(`/stitching/delivery-date/${itemId}/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ delivery_date: date })
+                });
+                if (response.ok) {
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Delivery date updated', type: 'success' } }));
+                }
+            } catch (error) {
+                console.error('Date update error:', error);
+                window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Failed to update date', type: 'error' } }));
             }
         }
     }

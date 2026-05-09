@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-[#fdf2f8] min-h-screen text-slate-800;
+        background-image: radial-gradient(circle at 0% 0%, #fdf2f8 0%, #fce7f3 50%, #fdf2f8 100%);
+    }
+}
+
+@layer components {
+    .glass-card {
+        @apply bg-white/50 backdrop-blur-2xl border border-white/60 shadow-xl rounded-3xl relative overflow-hidden;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.15) 100%);
+        box-shadow:
+            0 25px 50px -15px rgba(183, 110, 121, 0.3),
+            0 0 30px rgba(248, 200, 220, 0.3),
+            inset 0 1px 2px rgba(255, 255, 255, 0.9),
+            inset 0 -2px 8px rgba(183, 110, 121, 0.12);
+    }
+
+    .glass-sidebar {
+        @apply bg-white/50 backdrop-blur-2xl border-r border-white/60 relative;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.15) 100%);
+        box-shadow:
+            8px 0 40px rgba(183, 110, 121, 0.2),
+            inset -1px 0 20px rgba(255, 255, 255, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .glass-input {
+        @apply bg-white/40 backdrop-blur-lg border border-white/50 rounded-xl transition-all duration-300;
+    }
+
+    .glass-input:focus {
+        @apply bg-white/50 border-premium-gold/80 ring-0;
+        box-shadow: 0 0 20px rgba(248, 200, 220, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+    }
+
+    .glass-table-header {
+        @apply bg-white/40 backdrop-blur-lg border border-white/40;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(248, 200, 220, 0.1));
+    }
+
+    .glass-table-row {
+        @apply transition-all duration-300;
+        border: 1px solid rgba(248, 200, 220, 0.2);
+    }
+
+    .glass-table-row:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(248, 200, 220, 0.1));
+        box-shadow: inset 0 0 20px rgba(248, 200, 220, 0.1);
+    }
+
+    .glass-badge {
+        @apply bg-white/40 backdrop-blur-md border border-white/50 rounded-full;
+    }
+
+    .nav-link {
+        @apply flex items-center px-6 py-3 text-slate-600 transition-all duration-300 rounded-2xl mx-4 my-1 relative;
+    }
+
+    .nav-link:hover {
+        @apply bg-white/60 text-premium-gold;
+    }
+
+    .nav-link.active {
+        @apply bg-white/75 text-premium-gold font-semibold border border-white/50;
+        box-shadow: 0 8px 24px rgba(183, 110, 121, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .floating-sm {
+        @apply transition-transform duration-300 ease-in-out;
+    }
+
+    .floating-sm:hover {
+        @apply -translate-y-1;
+    }
+
+    .floating-md {
+        @apply transition-transform duration-300 ease-in-out;
+    }
+
+    .floating-md:hover {
+        @apply -translate-y-2;
+    }
+
+    .floating-lg {
+        @apply transition-transform duration-300 ease-in-out;
+    }
+
+    .floating-lg:hover {
+        @apply -translate-y-3;
+    }
+}
