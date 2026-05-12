@@ -1,22 +1,47 @@
 {% extends 'dashboard/base.html' %}
 
-{% block header %}Sales Records{% endblock %}
+{% block header %}Dues Management{% endblock %}
 
 {% block content %}
+<!-- Summary Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="glass-card p-8 flex items-center gap-6 group hover:shadow-2xl transition-all duration-500 border-l-4 border-red-500">
+        <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center text-red-500 shadow-inner group-hover:scale-110 transition-transform">
+            <i data-lucide="alert-circle" class="w-8 h-8"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Total Outstanding Dues</p>
+            <h3 class="text-3xl font-bold text-slate-800 playfair">Rs. {{ total_dues|floatformat:2 }}</h3>
+            <p class="text-[10px] text-red-400 mt-1 font-bold animate-pulse uppercase tracking-widest">Awaiting Collection</p>
+        </div>
+    </div>
+    
+    <div class="glass-card p-8 flex items-center gap-6 group hover:shadow-2xl transition-all duration-500">
+        <div class="w-16 h-16 bg-premium-pink rounded-2xl flex items-center justify-center text-premium-gold shadow-inner group-hover:scale-110 transition-transform">
+            <i data-lucide="users" class="w-8 h-8"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Pending Orders</p>
+            <h3 class="text-3xl font-bold text-slate-800 playfair">{{ orders|length }}</h3>
+            <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-widest font-semibold">Partial & Unpaid</p>
+        </div>
+    </div>
+</div>
+
 <div class="glass-card p-8 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
     <div class="flex items-center gap-4 flex-1">
         <div class="w-12 h-12 bg-premium-pink rounded-xl flex items-center justify-center text-premium-gold shadow-sm">
-            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+            <i data-lucide="wallet" class="w-6 h-6"></i>
         </div>
         <div>
-            <h4 class="text-xl font-bold text-slate-800 playfair">Sales & Order History</h4>
-            <p class="text-xs text-slate-500">View and manage past transactions.</p>
+            <h4 class="text-xl font-bold text-slate-800 playfair">Dues List</h4>
+            <p class="text-xs text-slate-500">View and recover outstanding payments from customers.</p>
         </div>
     </div>
     <div class="flex items-center gap-4">
-        <form action="{% url 'sales' %}" method="GET" class="glass-card px-4 py-2 flex items-center gap-3 bg-white/20">
+        <form action="{% url 'dues' %}" method="GET" class="glass-card px-4 py-2 flex items-center gap-3 bg-white/20">
             <i data-lucide="search" class="w-4 h-4 text-slate-400"></i>
-            <input type="text" name="q" value="{{ q }}" placeholder="Search orders..." class="bg-transparent border-none focus:ring-0 text-sm text-slate-600 w-48 outline-none">
+            <input type="text" name="q" value="{{ q }}" placeholder="Search dues..." class="bg-transparent border-none focus:ring-0 text-sm text-slate-600 w-48 outline-none">
         </form>
     </div>
 </div>
@@ -29,61 +54,42 @@
                     <th class="p-6">Order Token</th>
                     <th class="p-6">Date</th>
                     <th class="p-6">Customer</th>
-                    <th class="p-6 text-right">Amount</th>
-                    <th class="p-6 text-center">Status</th>
+                    <th class="p-6 text-right">Total Amount</th>
+                    <th class="p-6 text-right">Balance Due</th>
                     <th class="p-6 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-white/20">
                 {% for order in orders %}
                 <tr class="hover:bg-white/40 transition-colors" x-data="{ showPaymentModal: false, amount: '{{ order.balance_due|floatformat:0 }}', loading: false }">
-                    <td class="p-6 font-bold text-slate-700">{{ order.token_number }}</td>
-                    <td class="p-6 text-sm text-slate-600">{{ order.date|date:"M d, Y H:i" }}</td>
+                    <td class="p-6 font-bold text-slate-700">#{{ order.token_number }}</td>
+                    <td class="p-6 text-sm text-slate-600">{{ order.date|date:"M d, Y" }}</td>
                     <td class="p-6 text-sm text-slate-600">
-                        {{ order.customer.name|default:"Walk-in Customer" }}
+                        <div class="font-bold">{{ order.customer.name|default:"Walk-in Customer" }}</div>
                         {% if order.customer and order.customer.phone %}
-                            <br><span class="text-[10px] text-slate-400">{{ order.customer.phone }}</span>
+                            <div class="text-[10px] text-slate-400 font-bold tracking-widest">{{ order.customer.phone }}</div>
                         {% endif %}
                     </td>
+                    <td class="p-6 text-right font-bold text-slate-500">Rs. {{ order.final_amount }}</td>
                     <td class="p-6 text-right">
-                        <div class="font-bold text-premium-gold">Rs. {{ order.final_amount }}</div>
-                        {% if order.payment_status != 'Paid' %}
-                            <div class="text-[10px] text-red-400 font-bold uppercase tracking-widest mt-1">Due: Rs. {{ order.balance_due }}</div>
-                        {% endif %}
-                    </td>
-                    <td class="p-6 text-center">
-                        {% if order.payment_status == 'Paid' %}
-                            <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Paid</span>
-                        {% elif order.payment_status == 'Partial' %}
-                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Partial</span>
-                        {% else %}
-                            <span class="px-3 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Unpaid</span>
-                        {% endif %}
+                        <span class="px-3 py-1 bg-red-50 text-red-500 text-xs font-bold rounded-lg border border-red-100">
+                            Rs. {{ order.balance_due }}
+                        </span>
                     </td>
                     <td class="p-6 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            {% if order.payment_status != 'Paid' %}
-                            <button @click="showPaymentModal = true" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-sm" title="Add Payment">
-                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <button @click="showPaymentModal = true" class="inline-flex items-center justify-center h-8 px-3 rounded-full bg-blue-100 text-blue-500 hover:bg-blue-500 hover:text-white transition-all text-[10px] font-bold uppercase tracking-widest shadow-sm">
+                                <i data-lucide="plus-circle" class="w-3.5 h-3.5 mr-1"></i> Add Payment
                             </button>
-                            {% endif %}
                             
                             {% if order.customer and order.customer.phone %}
-                                {% if order.payment_status == 'Paid' %}
-                                    <a href="https://wa.me/{{ order.customer.phone }}?text=Hello%20{{ order.customer.name|urlencode|default:'Customer' }},%20your%20order%20({{ order.product_names|urlencode }})%20is%20ready.%20View%20Invoice:%20{{ request.scheme }}://{{ request.get_host }}{% url 'invoice' order.id %}%20Thank%20you%20for%20shopping%20with%20Saree%20by%20Pallu!" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-500 hover:bg-green-500 hover:text-white transition-all shadow-sm" title="Send Ready Message">
-                                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                                    </a>
-                                {% else %}
-                                    <a href="https://wa.me/{{ order.customer.phone }}?text=Hello%20{{ order.customer.name|urlencode|default:'Customer' }},%20your%20order%20({{ order.product_names|urlencode }})%20is%20ready.%20Your%20remaining%20balance%20is%20Rs.%20{{ order.balance_due }}.%20View%20Invoice:%20{{ request.scheme }}://{{ request.get_host }}{% url 'invoice' order.id %}%20Please%20collect%20your%20order.%20Thank%20you!" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-orange-100 text-orange-500 hover:bg-orange-500 hover:text-white transition-all shadow-sm" title="Send Balance Reminder">
-                                        <i data-lucide="message-circle" class="w-4 h-4"></i>
-                                    </a>
-                                {% endif %}
+                                <a href="https://wa.me/{{ order.customer.phone }}?text=Hello%20{{ order.customer.name|urlencode|default:'Customer' }},%20your%20order%20({{ order.product_names|urlencode }})%20from%20Saree%20by%20Pallu%20has%20a%20remaining%20balance%20of%20Rs.%20{{ order.balance_due }}.%20View%20Invoice:%20{{ request.scheme }}://{{ request.get_host }}{% url 'invoice' order.id %}%20Please%20collect%20your%20order%20and%20clear%20the%20dues.%20Thank%20you!" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-500 hover:bg-green-500 hover:text-white transition-all shadow-sm" title="Send WhatsApp Reminder">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                                </a>
                             {% endif %}
+                            
                             <a href="{% url 'invoice' order.id %}" target="_blank" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-white text-slate-400 hover:text-premium-gold hover:shadow-md transition-all" title="View Invoice">
                                 <i data-lucide="file-text" class="w-4 h-4"></i>
-                            </a>
-                            <a href="{% url 'void_order' order.id %}" class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-50 text-red-400 hover:bg-red-500 hover:text-white hover:shadow-md transition-all" title="Void Order (Return Stock)">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </a>
                         </div>
 
@@ -142,7 +148,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="p-10 text-center text-slate-400 italic">No sales recorded yet.</td>
+                    <td colspan="6" class="p-10 text-center text-slate-400 italic">No outstanding dues found! Great job.</td>
                 </tr>
                 {% endfor %}
             </tbody>

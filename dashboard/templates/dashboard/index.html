@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Metrics Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-    <div class="glass-card glass-card-pink p-6 flex items-center gap-6 group floating-sm hover:scale-[1.02] transition-all duration-300">
+    <a href="{% url 'sales' %}" class="glass-card glass-card-pink p-6 flex items-center gap-6 group floating-sm hover:scale-[1.05] transition-all duration-300 cursor-pointer">
         <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center text-premium-gold shadow-inner group-hover:bg-premium-pink group-hover:text-white transition-colors group-hover:shadow-lg">
             <i data-lucide="banknote" class="w-8 h-8"></i>
         </div>
@@ -12,7 +12,7 @@
             <h3 class="text-2xl font-bold text-slate-800">Rs. {{ total_sales|floatformat:2 }}</h3>
             <p class="text-[10px] text-slate-400 font-medium mt-1">Life-time revenue</p>
         </div>
-    </div>
+    </a>
 
     <div class="glass-card glass-card-blue p-6 flex items-center gap-6 group floating-sm hover:scale-[1.02] transition-all duration-300">
         <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500 shadow-inner group-hover:bg-blue-400 group-hover:text-white transition-colors group-hover:shadow-lg">
@@ -49,41 +49,118 @@
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <!-- Sales Overview & Recent Orders -->
+    <!-- Main Content Area (Left 2/3) -->
     <div class="lg:col-span-2 space-y-8">
-        <!-- Sales Chart Section (Placeholder) -->
-        <div class="glass-card glass-card-pink p-8 floating-sm">
-            <div class="flex items-center justify-between mb-8">
-                <h4 class="text-xl font-bold text-slate-800 playfair">Sales Overview</h4>
-                <select class="glass-input text-xs font-semibold text-slate-500 focus:ring-premium-gold/20 px-3 py-2">
-                    <option>This Week</option>
-                    <option>This Month</option>
-                </select>
+        <!-- Quick Actions (Now prominent) -->
+        <div class="glass-card p-8 floating-sm">
+            <h4 class="text-xl font-bold text-slate-800 playfair mb-8">Management Hub</h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <a href="{% url 'pos' %}" class="flex flex-col items-center justify-center p-6 rounded-3xl bg-white/50 hover:bg-premium-pink/30 hover:scale-105 transition-all group border border-white/60 shadow-sm hover:shadow-xl">
+                    <div class="w-14 h-14 bg-pink-100 rounded-2xl flex items-center justify-center text-premium-gold mb-4 group-hover:rotate-12 transition-transform">
+                        <i data-lucide="plus-circle" class="w-7 h-7"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-widest">New Sale</span>
+                </a>
+                <a href="{% url 'void_orders_list' %}" class="flex flex-col items-center justify-center p-6 rounded-3xl bg-white/50 hover:bg-purple-100/50 hover:scale-105 transition-all group border border-white/60 shadow-sm hover:shadow-xl">
+                    <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-500 mb-4 group-hover:-rotate-12 transition-transform">
+                        <i data-lucide="rotate-ccw" class="w-7 h-7"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-widest">Order Override</span>
+                </a>
+                <a href="{% url 'inventory' %}" class="flex flex-col items-center justify-center p-6 rounded-3xl bg-white/50 hover:bg-blue-100/50 hover:scale-105 transition-all group border border-white/60 shadow-sm hover:shadow-xl">
+                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:rotate-12 transition-transform">
+                        <i data-lucide="database" class="w-7 h-7"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-widest">Inventory</span>
+                </a>
+                <a href="{% url 'expenses' %}" class="flex flex-col items-center justify-center p-6 rounded-3xl bg-white/50 hover:bg-orange-100/50 hover:scale-105 transition-all group border border-white/60 shadow-sm hover:shadow-xl">
+                    <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-500 mb-4 group-hover:-rotate-12 transition-transform">
+                        <i data-lucide="banknote" class="w-7 h-7"></i>
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 uppercase tracking-widest">Expense</span>
+                </a>
             </div>
-            <div class="h-64 flex justify-between gap-4">
-                <!-- Dynamic bar chart visualization -->
-                {% for data in chart_data %}
-                <div class="flex-1 flex flex-col justify-end items-center gap-3 group relative h-full">
-                    <!-- Tooltip -->
-                    <div class="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-800 text-white text-[10px] font-bold py-1 px-2 rounded whitespace-nowrap pointer-events-none z-20">
-                        Rs. {{ data.total|floatformat:2 }}
-                    </div>
-                    <!-- Bar Container -->
-                    <div class="w-full bg-slate-900/5 rounded-t-xl overflow-hidden flex flex-col justify-end" style="height: 100%">
-                        <div class="w-full bg-gradient-to-t from-[#4A0E26] to-[#721B3E] rounded-t-xl group-hover:from-[#721B3E] group-hover:to-[#A32A5A] transition-all duration-500 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]" 
-                             style="height: {{ data.height }}%"></div>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-400 uppercase">{{ data.day_name }}</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Stitching Workflow Progress -->
+            <a href="{% url 'tailoring' %}" class="glass-card p-8 floating-sm hover:scale-[1.02] transition-all cursor-pointer block group">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-xl font-bold text-slate-800 playfair">Stitching Workflow</h4>
+                    <span class="px-3 py-1 bg-premium-gold/10 text-premium-gold text-[10px] font-bold rounded-full uppercase tracking-widest group-hover:bg-premium-gold group-hover:text-white transition-colors">Active queue</span>
                 </div>
-                {% endfor %}
-            </div>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between p-4 bg-slate-50/50 rounded-2xl hover:bg-white transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500">
+                                <i data-lucide="clock" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-sm font-bold text-slate-700">Pending</span>
+                        </div>
+                        <span class="text-lg font-black text-premium-gold">{{ workflow.pending|stringformat:"02d" }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-blue-50/30 rounded-2xl hover:bg-white transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500">
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-sm font-bold text-slate-700">Sent to Darzi</span>
+                        </div>
+                        <span class="text-lg font-black text-premium-gold">{{ workflow.sent|stringformat:"02d" }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-orange-50/30 rounded-2xl hover:bg-white transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500">
+                                <i data-lucide="scissors" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-sm font-bold text-slate-700">Stitching</span>
+                        </div>
+                        <span class="text-lg font-black text-premium-gold">{{ workflow.stitching|stringformat:"02d" }}</span>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-green-50/30 rounded-2xl hover:bg-white transition-colors">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center text-green-500">
+                                <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-sm font-bold text-slate-700">Ready</span>
+                        </div>
+                        <span class="text-lg font-black text-premium-gold">{{ workflow.ready|stringformat:"02d" }}</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Inventory Alerts -->
+            <a href="{% url 'inventory' %}" class="glass-card p-8 bg-red-50/10 floating-sm border-red-100/50 hover:scale-[1.02] transition-all cursor-pointer block group">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-red-500 playfair">Low Stock Alerts</h4>
+                </div>
+                <div class="space-y-4">
+                    {% for variant in low_stock_items %}
+                    <div class="flex items-center justify-between p-4 bg-white/60 rounded-2xl border border-red-50 group hover:border-red-200 transition-all">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-slate-700 truncate max-w-[150px]">{{ variant.product.name }}</span>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ variant.color }} • {{ variant.size }}</span>
+                        </div>
+                        <span class="px-3 py-1.5 bg-red-50 text-red-600 text-[10px] font-black rounded-xl uppercase">{{ variant.stock }} Left</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-center py-10 flex flex-col items-center opacity-40">
+                        <i data-lucide="check-circle-2" class="w-12 h-12 mb-2 text-green-500"></i>
+                        <p class="text-sm font-bold italic">Stock levels are healthy</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </a>
         </div>
 
         <!-- Recent Orders Table -->
         <div class="glass-card glass-card-gold overflow-hidden floating-sm">
-            <div class="p-8 flex items-center justify-between border-b border-white/40">
-                <h4 class="text-xl font-bold text-slate-800 playfair">Recent Sales</h4>
-                <a href="#" class="text-premium-gold text-xs font-bold hover:underline transition-colors">View All</a>
+            <div class="p-8 flex items-center justify-between border-b border-white/40 bg-white/20">
+                <h4 class="text-xl font-bold text-slate-800 playfair">Recent Transactions</h4>
+                <a href="{% url 'sales' %}" class="px-4 py-2 bg-premium-gold/10 text-premium-gold text-[10px] font-bold rounded-xl hover:bg-premium-gold hover:text-white transition-all uppercase tracking-widest">View All</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
@@ -114,20 +191,16 @@
                                 </div>
                             </td>
                             <td class="px-8 py-5">
-                                <span class="text-sm font-bold text-slate-700">Rs. {{ order.final_amount|floatformat:2 }}</span>
+                                <span class="text-sm font-bold text-slate-700">Rs. {{ order.final_amount|floatformat:0 }}</span>
                             </td>
                             <td class="px-8 py-5">
                                 <span class="glass-badge px-3 py-1 bg-green-100/40 text-green-600 text-[10px] font-bold rounded-full uppercase tracking-wider border-green-300/50">Completed</span>
                             </td>
                             <td class="px-8 py-5 text-right">
-                                <button class="p-2 hover:bg-white/40 rounded-lg transition-colors text-slate-400 hover:text-premium-gold">
+                                <a href="{% url 'invoice' order.id %}" target="_blank" class="p-2 inline-block hover:bg-white/40 rounded-lg transition-colors text-slate-400 hover:text-premium-gold">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
-                                </button>
+                                </a>
                             </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="px-8 py-10 text-center text-slate-400 italic">No orders yet today.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -136,99 +209,75 @@
         </div>
     </div>
 
-    <!-- Sidebar Cards -->
+    <!-- Sidebar (Right 1/3) -->
     <div class="space-y-8">
-        <!-- Quick Actions -->
-        <div class="glass-card p-8">
-            <h4 class="text-lg font-bold text-slate-800 playfair mb-6">Quick Actions</h4>
-            <div class="grid grid-cols-2 gap-4">
-                <a href="{% url 'pos' %}" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 hover:bg-premium-pink/20 transition-all group border border-white/50">
-                    <div class="w-10 h-10 bg-pink-100 rounded-xl flex items-center justify-center text-premium-gold mb-2 group-hover:scale-110 transition-transform">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">New Sale</span>
-                </a>
-                <a href="{% url 'pos' %}" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 hover:bg-purple-100/50 transition-all group border border-white/50">
-                    <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-purple-500 mb-2 group-hover:scale-110 transition-transform">
-                        <i data-lucide="scissors" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">New Order</span>
-                </a>
-                <a href="{% url 'inventory' %}" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 hover:bg-blue-100/50 transition-all group border border-white/50">
-                    <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500 mb-2 group-hover:scale-110 transition-transform">
-                        <i data-lucide="database" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Inventory</span>
-                </a>
-                <a href="{% url 'sales' %}" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 hover:bg-orange-100/50 transition-all group border border-white/50">
-                    <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-500 mb-2 group-hover:scale-110 transition-transform">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Reports</span>
-                </a>
+        <!-- Sales Overview Chart -->
+        <div class="glass-card glass-card-pink p-8 floating-sm h-full flex flex-col border-premium-pink/20 bg-gradient-to-b from-premium-pink/5 to-transparent">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h4 class="text-lg font-bold text-slate-800 playfair">Sales Analysis</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Performance Insight</p>
+                </div>
+                <select onchange="window.location.href='?period=' + this.value" class="bg-white/60 border-none text-[9px] font-bold text-slate-600 focus:ring-premium-gold/20 px-3 py-1.5 rounded-xl cursor-pointer shadow-sm">
+                    <option value="week" {% if current_period == 'week' %}selected{% endif %}>WEEKLY</option>
+                    <option value="month" {% if current_period == 'month' %}selected{% endif %}>MONTHLY</option>
+                    <option value="year" {% if current_period == 'year' %}selected{% endif %}>YEARLY</option>
+                </select>
             </div>
-        </div>
 
-        <!-- Stitching Workflow Progress -->
-        <div class="glass-card p-8">
-            <h4 class="text-lg font-bold text-slate-800 playfair mb-6">Stitching Workflow</h4>
-            <div class="space-y-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
-                            <i data-lucide="clock" class="w-4 h-4"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-600">Pending</span>
-                    </div>
-                    <span class="text-xs font-bold text-premium-gold">{{ workflow.pending|stringformat:"02d" }}</span>
+            <!-- Stats Summary Row -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="p-3 bg-white/40 rounded-2xl border border-white/60">
+                    <span class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Total Period</span>
+                    <span class="text-sm font-black text-slate-800">Rs. {{ analysis_stats.total|floatformat:0 }}</span>
                 </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-500">
-                            <i data-lucide="send" class="w-4 h-4"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-600">Sent to Darzi</span>
-                    </div>
-                    <span class="text-xs font-bold text-premium-gold">{{ workflow.sent|stringformat:"02d" }}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center text-orange-500">
-                            <i data-lucide="scissors" class="w-4 h-4"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-600">Stitching</span>
-                    </div>
-                    <span class="text-xs font-bold text-premium-gold">{{ workflow.stitching|stringformat:"02d" }}</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-500">
-                            <i data-lucide="check-circle" class="w-4 h-4"></i>
-                        </div>
-                        <span class="text-xs font-semibold text-slate-600">Ready</span>
-                    </div>
-                    <span class="text-xs font-bold text-premium-gold">{{ workflow.ready|stringformat:"02d" }}</span>
+                <div class="p-3 bg-white/40 rounded-2xl border border-white/60">
+                    <span class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Avg. Sale</span>
+                    <span class="text-sm font-black text-premium-gold">Rs. {{ analysis_stats.avg|floatformat:0 }}</span>
                 </div>
             </div>
-        </div>
-
-        <!-- Inventory Alerts -->
-        <div class="glass-card p-8 bg-red-50/20">
-            <div class="flex items-center gap-2 mb-6">
-                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i>
-                <h4 class="text-lg font-bold text-red-400 playfair">Low Stock</h4>
-            </div>
-            <div class="space-y-4">
-                {% for variant in low_stock_items %}
-                <div class="flex items-center justify-between p-3 bg-white/40 rounded-xl">
-                    <span class="text-xs font-medium text-slate-600 truncate mr-2">{{ variant.product.name }} ({{ variant.color }})</span>
-                    <span class="text-xs font-bold text-red-500 shrink-0">{{ variant.stock }} left</span>
+            
+            <div class="flex-1 flex flex-col">
+                <div class="h-64 flex justify-between items-end gap-1 overflow-x-auto pb-6 custom-scrollbar px-1">
+                    {% for data in chart_data %}
+                    <div class="flex-1 min-w-[14px] flex flex-col justify-end items-center gap-2 group relative h-full">
+                        <!-- Tooltip -->
+                        <div class="absolute -top-12 opacity-0 group-hover:opacity-100 transition-all bg-slate-800 text-white text-[9px] font-bold py-1.5 px-2.5 rounded-lg whitespace-nowrap pointer-events-none z-20 shadow-xl transform -translate-y-2 group-hover:translate-y-0">
+                            Rs. {{ data.total|floatformat:0 }}
+                            <div class="absolute bottom-[-4px] left-1/2 transform -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45"></div>
+                        </div>
+                        
+                        <!-- Bar Container -->
+                        <div class="w-full bg-slate-200/30 rounded-t-lg overflow-hidden flex flex-col justify-end group-hover:bg-slate-200/50 transition-colors" style="height: 100%">
+                            <div class="w-full bg-gradient-to-t from-[#5E1231] via-[#8B234B] to-[#C3316D] rounded-t-lg group-hover:brightness-110 transition-all duration-500 shadow-[0_-2px_10px_rgba(195,49,109,0.3)] relative" 
+                                 style="height: {{ data.height }}%">
+                                 {% if data.total == analysis_stats.max and data.total > 0 %}
+                                 <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-premium-gold rounded-full shadow-[0_0_8px_#D4AF37] animate-pulse"></div>
+                                 {% endif %}
+                            </div>
+                        </div>
+                        <span class="text-[8px] font-black text-slate-400 uppercase {% if chart_data|length > 12 %}vertical-text{% endif %}">{{ data.label }}</span>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="text-center py-4 text-xs text-slate-400 italic">
-                    Inventory levels healthy.
+                
+                <!-- Bottom Insight -->
+                <div class="mt-auto pt-6 border-t border-white/40">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center text-green-500 shadow-sm">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-700 uppercase tracking-tight">Best Performance</p>
+                            <p class="text-[9px] text-slate-400 font-bold">Rs. {{ analysis_stats.max|floatformat:0 }} in this period</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-premium-pink/10 rounded-2xl border border-premium-pink/20">
+                        <p class="text-[9px] text-slate-500 leading-relaxed font-medium italic">
+                            "Focus on items sold during peak days to maximize your {{ current_period }}ly turnover."
+                        </p>
+                    </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>

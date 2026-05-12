@@ -13,9 +13,17 @@
             <p class="text-xs text-slate-500">Manage customers, track spending and pending balances.</p>
         </div>
     </div>
+    
+    <div class="flex-1 max-w-md">
+        <form action="{% url 'customers' %}" method="GET" class="relative group">
+            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-premium-gold transition-colors"></i>
+            <input type="text" name="q" value="{{ q }}" placeholder="Search by name or phone..." 
+                   class="w-full pl-12 pr-4 py-3 glass-input rounded-2xl text-sm focus:ring-premium-gold/20">
+        </form>
+    </div>
 </div>
 
-<div class="glass-card overflow-hidden">
+<div class="glass-card overflow-hidden mb-8">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
             <thead>
@@ -61,11 +69,34 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="p-10 text-center text-slate-400 italic">No customers found with recorded details.</td>
+                    <td colspan="6" class="p-10 text-center text-slate-400 italic">No customers found matching your search.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Pagination Controls -->
+{% if paginator.num_pages > 1 %}
+<div class="flex justify-center gap-2 mt-8 mb-12">
+    {% if page_obj.has_previous %}
+    <a href="?page=1{% if q %}&q={{ q }}{% endif %}" class="px-4 py-2 bg-white/40 hover:bg-white/60 rounded-lg font-bold text-sm text-slate-700 transition-colors">First</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}" class="px-4 py-2 bg-white/40 hover:bg-white/60 rounded-lg font-bold text-sm text-slate-700 transition-colors">← Prev</a>
+    {% endif %}
+
+    {% for num in paginator.page_range %}
+        {% if page_obj.number == num %}
+        <button class="px-4 py-2 bg-premium-gold text-white rounded-lg font-bold text-sm">{{ num }}</button>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}{% if q %}&q={{ q }}{% endif %}" class="px-4 py-2 bg-white/40 hover:bg-white/60 rounded-lg font-bold text-sm text-slate-700 transition-colors">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}" class="px-4 py-2 bg-white/40 hover:bg-white/60 rounded-lg font-bold text-sm text-slate-700 transition-colors">Next →</a>
+    <a href="?page={{ paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}" class="px-4 py-2 bg-white/40 hover:bg-white/60 rounded-lg font-bold text-sm text-slate-700 transition-colors">Last</a>
+    {% endif %}
+</div>
+{% endif %}
 {% endblock %}

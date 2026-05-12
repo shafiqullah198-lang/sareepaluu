@@ -42,6 +42,24 @@ class SubCategoryForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20', 'rows': 3}),
         }
 
+COLOR_CHOICES = [
+    ('Red', 'Red'),
+    ('Pink', 'Pink'),
+    ('Gold', 'Gold'),
+    ('Blue', 'Blue'),
+    ('Green', 'Green'),
+    ('Black', 'Black'),
+    ('White', 'White'),
+    ('Maroon', 'Maroon'),
+    ('Cream', 'Cream'),
+    ('Peach', 'Peach'),
+    ('Purple', 'Purple'),
+    ('Brown', 'Brown'),
+    ('Gray', 'Gray'),
+    ('Navy', 'Navy'),
+    ('Beige', 'Beige'),
+]
+
 class ProductForm(forms.ModelForm):
     category_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20',
@@ -54,28 +72,37 @@ class ProductForm(forms.ModelForm):
         'placeholder': 'Select or type new subcategory...'
     }))
     
-    price = forms.DecimalField(required=False, initial=0, widget=forms.NumberInput(attrs={
+    cost_price = forms.DecimalField(required=True, initial=0, widget=forms.NumberInput(attrs={
         'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20',
-        'placeholder': 'Default selling price'
-    }))
+        'placeholder': 'Buying Price / Cost Price'
+    }), label="Buying Price (Cost)")
     stock = forms.IntegerField(required=False, initial=0, widget=forms.NumberInput(attrs={
         'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20',
-        'placeholder': 'Initial stock quantity'
-    }))
+        'placeholder': 'Total Stock',
+        'readonly': 'readonly'
+    }), label="Total Stock (Auto-calculated)")
+    
+    available_colors = forms.MultipleChoiceField(
+        choices=COLOR_CHOICES,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'grid grid-cols-3 gap-2 p-4 bg-slate-50 rounded-2xl border border-slate-100'
+        }),
+        required=False,
+        label="Select Available Colors"
+    )
 
     class Meta:
         model = Product
-        fields = ['name', 'image', 'is_handmade', 'description']
+        fields = ['name', 'image', 'is_handmade']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
             'image': forms.ClearableFileInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
-            'description': forms.Textarea(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20', 'rows': 3}),
         }
 
 class VariantForm(forms.ModelForm):
     class Meta:
         model = ProductVariant
-        fields = ['sku', 'color', 'size', 'price', 'stock', 'image']
+        fields = ['sku', 'color', 'size', 'price', 'cost_price', 'stock', 'image']
         widgets = {
             'sku': forms.TextInput(attrs={
                 'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20',
@@ -84,6 +111,7 @@ class VariantForm(forms.ModelForm):
             'color': forms.TextInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
             'size': forms.TextInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
             'price': forms.NumberInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
+            'cost_price': forms.NumberInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
             'stock': forms.NumberInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
             'image': forms.ClearableFileInput(attrs={'class': 'glass-input w-full px-4 py-2 text-sm text-slate-700 focus:ring-premium-gold/20'}),
         }

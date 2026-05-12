@@ -6,111 +6,115 @@
 <div x-data="posSystem()" class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
     <!-- Left Column: Products -->
     <div class="xl:col-span-2 space-y-8">
-        <!-- Categories Filter -->
-        <div class="space-y-6">
-            <!-- Search Bar (Full Width Above Categories) -->
-            <div class="glass-input px-6 py-4 flex items-center gap-4 w-full shadow-sm group focus-within:shadow-md transition-all duration-300">
-                <i data-lucide="search" class="w-5 h-5 text-slate-400 group-focus-within:text-premium-gold transition-colors"></i>
+        <!-- Search Bar with Dropdown -->
+        <div class="relative w-full z-50" @click.away="isSearchFocused = false">
+            <div class="glass-input px-6 py-5 flex items-center gap-4 w-full shadow-lg group focus-within:shadow-xl transition-all duration-300 border-2 border-transparent focus-within:border-premium-gold/30">
+                <i data-lucide="search" class="w-6 h-6 text-slate-400 group-focus-within:text-premium-gold transition-colors"></i>
                 <input 
                     type="text" 
                     x-model="searchQuery" 
-                    @input.debounce.300ms="performSearch"
-                    placeholder="Search name, color, SKU..." 
-                    class="bg-transparent border-none focus:ring-0 focus:outline-none outline-none text-sm font-bold text-slate-700 w-full p-0 placeholder-slate-400 uppercase tracking-widest"
+                    @input="isSearchFocused = true; performSearch(); $nextTick(() => lucide.createIcons())"
+                    @focus="isSearchFocused = true"
+                    placeholder="Type to search products, colors, or SKU..." 
+                    class="bg-transparent border-none focus:ring-0 focus:outline-none outline-none text-lg font-bold text-slate-700 w-full p-0 placeholder-slate-400 uppercase tracking-widest"
                 >
             </div>
 
-            <!-- Categories Filter (Slidable) -->
-            <div class="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-2 px-2">
-                <button 
-                    @click="filterCategory('all')"
-                    :class="activeCategory === 'all' ? 'bg-premium-gold text-white shadow-lg scale-105' : 'glass-input text-slate-600 hover:bg-white/40'"
-                    class="px-8 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex-shrink-0">
-                    All Collections
-                </button>
-                {% for category in categories %}
-                <button 
-                    @click="filterCategory('{{ category.name }}')"
-                    :class="activeCategory === '{{ category.name }}' ? 'bg-premium-gold text-white shadow-lg scale-105' : 'glass-input text-slate-600 hover:bg-white/40'"
-                    class="px-8 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all flex-shrink-0">
-                    {{ category.name }}
-                </button>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Search Results: Partial Orders -->
-        <template x-if="searchResults.orders.length > 0">
-            <div class="space-y-4 animate-fade-in">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="alert-circle" class="w-5 h-5 text-red-400"></i>
-                    <h5 class="text-sm font-bold text-slate-800 uppercase tracking-widest">Pending Balance Orders</h5>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <template x-for="order in searchResults.orders" :key="order.id">
-                        <div class="glass-card border-red-200 bg-red-50/10 p-5 flex items-center justify-between group hover:border-red-400 transition-all">
-                            <div>
-                                <h6 class="text-sm font-bold text-slate-800" x-text="'Token: #' + order.title"></h6>
-                                <p class="text-[10px] text-slate-500 font-medium mt-1" x-text="order.subtitle"></p>
-                            </div>
-                            <button 
-                                @click="window.dispatchEvent(new CustomEvent('open-payment', { detail: order }))"
-                                class="px-4 py-2 bg-red-500 text-white text-[10px] font-bold rounded-xl uppercase tracking-widest shadow-lg hover:bg-red-600 transition-all floating-sm">
-                                Pay Now
-                            </button>
+            <!-- Search Dropdown Results -->
+            <div 
+                x-show="isSearchFocused && (filteredProducts().length > 0 || searchResults.orders.length > 0 || searchQuery.length > 0)" 
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 translate-y-4"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                class="absolute top-full left-0 right-0 mt-4 glass-card bg-white/95 backdrop-blur-xl shadow-2xl border border-white/50 max-h-[70vh] overflow-y-auto z-[100] p-2"
+                x-cloak
+            >
+                <!-- Products Section -->
+                <template x-if="filteredProducts().length > 0">
+                    <div class="space-y-1 mb-4">
+                        <div class="px-4 py-2 border-b border-slate-100 mb-2">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Products</span>
                         </div>
-                    </template>
-                </div>
-            </div>
-        </template>
-
-        <!-- Product Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <template x-for="product in filteredProducts()" :key="product.id">
-                <div
-                    class="glass-card glass-card-pink group overflow-hidden floating-md hover:scale-[1.04] transition-all duration-300">
-                    <div class="relative h-64 overflow-hidden">
-                        <template x-if="product.image">
-                            <img :src="product.image" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        </template>
-                        <template x-if="!product.image">
-                            <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
-                                <i data-lucide="image" class="w-12 h-12"></i>
-                            </div>
-                        </template>
-
-                        <template x-if="product.is_handmade">
-                            <span class="absolute top-4 left-4 px-3 py-1 glass-badge bg-premium-pink/80 backdrop-blur-md text-white text-[10px] font-bold rounded-full uppercase tracking-widest border-white/40">Handmade</span>
-                        </template>
-
-                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                            <button
+                        <template x-for="product in filteredProducts()" :key="product.id">
+                            <div 
                                 @click="selectProduct(product)"
-                                class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-premium-gold shadow-xl hover:bg-premium-gold hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 floating-md">
-                                <i data-lucide="plus" class="w-6 h-6"></i>
-                            </button>
-                        </div>
+                                class="flex items-center gap-4 p-4 hover:bg-premium-gold/10 rounded-2xl cursor-pointer transition-all group border border-transparent hover:border-premium-gold/20"
+                            >
+                                <div class="w-16 h-16 rounded-xl overflow-hidden shadow-md">
+                                    <template x-if="product.image">
+                                        <img :src="product.image" class="w-full h-full object-cover">
+                                    </template>
+                                    <template x-if="!product.image">
+                                        <div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
+                                            <i data-lucide="image" class="w-6 h-6"></i>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="text-base font-bold text-slate-800 group-hover:text-premium-gold transition-colors" x-text="product.name"></h5>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5" x-text="product.category"></p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="w-10 h-10 rounded-full bg-premium-gold/10 flex items-center justify-center text-premium-gold">
+                                        <i data-lucide="plus" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
-                    <div class="p-6">
-                        <p class="text-[10px] font-bold text-premium-gold uppercase tracking-widest mb-1" x-text="product.category"></p>
-                        <h4 class="text-lg font-bold text-slate-800 playfair truncate" x-text="product.name"></h4>
-                        <div class="flex items-center justify-between mt-4">
-                            <span class="text-sm font-bold text-slate-500" x-text="'Variants: ' + product.variants.length"></span>
-                            <span class="text-lg font-bold text-premium-gold" x-text="'Rs. ' + (product.variants.length > 0 ? product.variants[0].price : '0.00')"></span>
+                </template>
+
+                <!-- Pending Orders Section -->
+                <template x-if="searchResults.orders.length > 0">
+                    <div class="space-y-1">
+                        <div class="px-4 py-2 border-b border-red-100 mb-2">
+                            <span class="text-[10px] font-bold text-red-400 uppercase tracking-widest">Pending Orders</span>
                         </div>
+                        <template x-for="order in searchResults.orders" :key="order.id">
+                            <div class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-all border border-transparent hover:border-slate-100">
+                                <div>
+                                    <h6 class="text-sm font-bold text-slate-800" x-text="'Order: #' + order.title"></h6>
+                                    <p class="text-[10px] text-slate-500 font-medium" x-text="order.subtitle"></p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <template x-if="order.payment_status !== 'Paid'">
+                                        <button 
+                                            @click="window.dispatchEvent(new CustomEvent('open-payment', { detail: order }))"
+                                            class="px-4 py-2 bg-blue-500 text-white text-[10px] font-bold rounded-xl uppercase tracking-widest shadow-lg hover:bg-blue-600 transition-all">
+                                            Pay
+                                        </button>
+                                    </template>
+                                    <a 
+                                        :href="order.void_url"
+                                        class="px-4 py-2 bg-red-50 text-red-500 text-[10px] font-bold rounded-xl uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
+                                        Void
+                                    </a>
+                                </div>
+                            </div>
+                        </template>
                     </div>
-                </div>
-            </template>
+                </template>
+
+                <template x-if="filteredProducts().length === 0 && searchResults.orders.length === 0 && searchQuery.length > 0">
+                    <div class="p-10 text-center text-slate-400">
+                        <i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-30"></i>
+                        <p class="font-bold uppercase tracking-widest text-xs">No results found</p>
+                    </div>
+                </template>
+            </div>
         </div>
 
-        <!-- Empty State for Search -->
-        <template x-if="filteredProducts().length === 0">
-            <div class="py-20 glass-card flex flex-col items-center justify-center text-slate-400 opacity-60 animate-fade-in">
-                <i data-lucide="search-x" class="w-16 h-16 mb-4"></i>
-                <p class="text-lg font-bold italic">No products match your search or category.</p>
-                <button @click="searchQuery = ''; activeCategory = 'all'" class="mt-4 text-premium-gold font-bold text-xs uppercase tracking-widest hover:underline">Clear all filters</button>
+        <!-- Hero Section when no search -->
+        <template x-if="!searchQuery && !isSearchFocused && cart.length === 0">
+            <div class="py-20 flex flex-col items-center justify-center text-slate-400 animate-fade-in text-center px-10">
+                <div class="w-24 h-24 bg-premium-gold/10 rounded-full flex items-center justify-center mb-6">
+                    <i data-lucide="shopping-bag" class="w-12 h-12 text-premium-gold opacity-50"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-slate-700 playfair mb-3">Ready for a new sale?</h2>
+                <p class="text-slate-500 max-w-md mx-auto leading-relaxed">Search for a product above to start adding items to the current transaction.</p>
             </div>
         </template>
+
     </div>
 
     <!-- Right Column: Cart & Checkout -->
@@ -135,7 +139,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1 min-w-0 pr-4">
                                 <h5 class="text-sm font-bold text-slate-700 truncate" x-text="item.name"></h5>
-                                <p class="text-[10px] text-slate-500 font-medium" x-text="item.variant + ' | ' + item.size"></p>
+                                <p class="text-[10px] text-slate-500 font-medium" x-text="item.variant + ' | Qty: ' + item.quantity"></p>
                             </div>
                             <button @click="removeFromCart(index)" class="text-slate-300 hover:text-red-400 transition-colors">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -144,14 +148,15 @@
 
                         <div class="flex items-center justify-between pt-2 border-t border-white/20">
                             <div class="flex items-center gap-4">
-                                <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="checkbox" x-model="item.needs_stitching" class="w-3.5 h-3.5 rounded text-premium-gold focus:ring-premium-gold">
-                                    <span class="text-[10px] font-bold text-premium-gold uppercase tracking-widest">Stitching</span>
+                                <label class="flex items-center gap-1.5 cursor-pointer group">
+                                    <input type="checkbox" x-model="item.needs_stitching" 
+                                           class="w-3.5 h-3.5 rounded text-premium-gold focus:ring-premium-gold">
+                                    <span class="text-[10px] font-bold text-premium-gold uppercase tracking-widest group-hover:text-premium-gold/80 transition-colors">Stitching</span>
                                 </label>
 
                                 <template x-if="item.needs_stitching">
                                     <div class="flex items-center gap-1 animate-fade-in">
-                                        <span class="text-[10px] font-bold text-slate-400">Rs.</span>
+                                        <span class="text-[10px] font-bold text-slate-400">Fee Rs.</span>
                                         <input
                                             type="number"
                                             x-model="item.stitching_price"
@@ -161,10 +166,20 @@
                                     </div>
                                 </template>
                             </div>
-                            <span class="text-sm font-bold text-premium-gold" x-text="'Rs. ' + (parseFloat(item.price) + parseFloat(item.stitching_price || 0)).toFixed(2)"></span>
+                            
+                            <div class="flex items-center gap-1">
+                                <!-- Price is now distributed automatically from manual total -->
+                                <template x-if="item.price > 0">
+                                    <div class="flex items-center gap-1 animate-fade-in">
+                                        <span class="text-[10px] font-bold text-slate-400">Rs.</span>
+                                        <span class="text-xs font-bold text-premium-gold" x-text="parseFloat(item.price).toFixed(2)"></span>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
                 </template>
+
             </div>
 
             <!-- Customer & Summary -->
@@ -183,7 +198,25 @@
                         <span>Stitching Total</span>
                         <span x-text="'Rs. ' + calculateStitchingTotal()"></span>
                     </div>
-                    <div class="flex justify-between items-center text-lg font-bold text-slate-800 pt-2 border-t border-white/20">
+                    <div class="flex justify-between items-center text-xs font-semibold text-slate-500">
+                        <span>Discount</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-[10px] font-bold text-slate-400">Rs.</span>
+                            <input type="number" x-model="discount" placeholder="0" class="glass-input w-20 px-2 py-1 text-right text-xs">
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold text-slate-800 pt-4 border-t border-white/20">
+                        <span class="playfair">Manual Product Total</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-sm font-bold text-slate-400">Rs.</span>
+                            <input type="number" x-model="manualTotal" placeholder="Override Products" class="glass-input w-32 px-3 py-2 text-right text-lg font-bold text-premium-gold">
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-bold text-slate-500 pt-2">
+                        <span>Calculated</span>
+                        <span x-text="'Rs. ' + ((calculateSubtotal() + calculateStitchingTotal()) - parseFloat(discount || 0)).toFixed(2)"></span>
+                    </div>
+                    <div class="flex justify-between items-center text-xl font-bold text-slate-800 pt-4 mt-2 bg-premium-gold/5 p-4 rounded-2xl border border-premium-gold/10">
                         <span class="playfair">Total Payable</span>
                         <span class="text-premium-gold" x-text="'Rs. ' + calculateTotal()"></span>
                     </div>
@@ -215,58 +248,123 @@
                     </div>
                 </div>
 
-                <button
-                    @click="checkout()"
-                    :disabled="cart.length === 0"
-                    class="w-full py-4 rounded-2xl btn-premium font-bold text-sm uppercase tracking-[0.2em] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed floating-sm">
-                    Complete Order
-                </button>
+                <div class="flex gap-4">
+                    <button
+                        @click="checkout(false)"
+                        :disabled="cart.length === 0"
+                        class="flex-1 py-4 rounded-2xl bg-slate-100 font-bold text-sm uppercase tracking-widest text-slate-500 hover:bg-slate-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        Save Only
+                    </button>
+                    <button
+                        @click="checkout(true)"
+                        :disabled="cart.length === 0"
+                        class="flex-[2] py-4 rounded-2xl btn-premium font-bold text-sm uppercase tracking-[0.2em] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed floating-sm">
+                        Complete & Print
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Variant Selection Modal -->
     <div x-show="showVariantModal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-lg" x-cloak>
-        <div class="glass-card glass-card-pink w-full max-w-md p-8 bg-white/90 floating-lg" @click.away="showVariantModal = false">
-            <h3 class="text-2xl font-bold text-slate-800 playfair mb-6" x-text="'Select Variant: ' + selectedProduct.name"></h3>
-            <div class="space-y-6">
-                <p class="text-sm text-slate-500 mb-4">Please select the color and size for the item.</p>
+        <div class="glass-card glass-card-pink w-full max-w-2xl p-8 bg-white/95 shadow-2xl floating-lg" @click.away="showVariantModal = false">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h3 class="text-3xl font-bold text-slate-800 playfair" x-text="selectedProduct.name"></h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Configure Product Details</p>
+                </div>
+                <button @click="showVariantModal = false" class="w-10 h-10 glass-card flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
 
-                <div class="space-y-4 max-h-60 overflow-y-auto pr-2">
-                    <template x-for="variant in selectedProduct.variants.filter(v => !searchQuery || selectedProduct.name.toLowerCase().includes(searchQuery.toLowerCase()) || (v.color && v.color.toLowerCase().includes(searchQuery.toLowerCase())) || (v.sku && v.sku.toLowerCase().includes(searchQuery.toLowerCase())))" :key="variant.id">
-                        <label class="flex items-center justify-between p-4 rounded-2xl glass-card border border-slate-200 hover:border-premium-gold hover:shadow-md cursor-pointer transition-all">
-                            <div class="flex items-center gap-3">
-                                <input type="radio" name="variant" :value="variant.id" x-model="selectedVariantId" class="text-premium-gold focus:ring-premium-gold">
-                                <div class="w-12 h-12 rounded-lg overflow-hidden bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
-                                    <template x-if="variant.image || selectedProduct.image">
-                                        <img :src="variant.image || selectedProduct.image" class="w-full h-full object-cover">
-                                    </template>
-                                    <template x-if="!(variant.image || selectedProduct.image)">
-                                        <i data-lucide="image" class="w-6 h-6 text-slate-200"></i>
-                                    </template>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-bold text-slate-700" x-text="variant.color + ' / ' + variant.size"></span>
-                                    <span class="text-[10px] text-slate-400 uppercase font-bold" x-text="'Stock: ' + variant.stock"></span>
-                                </div>
-                            </div>
-                            <span class="text-sm font-bold text-premium-gold" x-text="'Rs. ' + variant.price"></span>
-                        </label>
-                    </template>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Left Side: Color Selection -->
+                <div class="space-y-8">
+                    <div x-show="recentColors.length > 0">
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Most Used Colors</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <template x-for="colorName in recentColors" :key="colorName">
+                                <button 
+                                    @click="selectedColor = colorName; selectedVariantId = selectedProduct.variants.find(v => v.color === colorName)?.id || selectedVariantId"
+                                    class="w-10 h-10 rounded-full border-2 transition-all relative group"
+                                    :class="selectedColor === colorName ? 'border-premium-gold scale-110 shadow-lg' : 'border-transparent hover:scale-105'"
+                                    :style="'background-color: ' + (commonColors.find(c => c.name === colorName)?.hex || '#cbd5e1')"
+                                    :title="colorName"
+                                >
+                                    <i x-show="selectedColor === colorName" data-lucide="check" class="w-4 h-4 text-white absolute inset-0 m-auto drop-shadow-md"></i>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Select Color</h4>
+                        <div class="grid grid-cols-5 gap-4">
+                            <template x-for="variant in selectedProduct.variants" :key="variant.id">
+                                <button 
+                                    @click="updateColor(variant)"
+                                    class="aspect-square rounded-2xl border-2 flex flex-col items-center justify-center p-2 transition-all relative group"
+                                    :class="selectedVariantId == variant.id ? 'border-premium-gold bg-premium-gold/5 scale-105 shadow-md' : 'border-slate-100 hover:border-premium-gold/20'"
+                                >
+                                    <div 
+                                        class="w-8 h-8 rounded-full mb-1.5 shadow-sm border border-black/5"
+                                        :style="'background-color: ' + (commonColors.find(c => c.name.toLowerCase() === variant.color.toLowerCase())?.hex || '#e2e8f0')"
+                                    ></div>
+                                    <span class="text-[9px] font-bold text-slate-600 uppercase truncate w-full text-center" x-text="variant.color"></span>
+                                    <i x-show="selectedVariantId == variant.id" data-lucide="check-circle-2" class="w-4 h-4 text-premium-gold absolute -top-1.5 -right-1.5 bg-white rounded-full"></i>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex gap-4 mt-8">
-                    <button @click="showVariantModal = false" class="flex-1 py-3 glass-card rounded-xl text-xs font-bold text-slate-500 uppercase tracking-widest hover:bg-white/40 transition-all">Cancel</button>
+                <!-- Right Side: Quantity & Action -->
+                <div class="flex flex-col justify-between py-2">
+                    <div class="space-y-8">
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Quantity</label>
+                            <div class="flex items-center gap-4">
+                                <button @click="selectedQuantity = Math.max(1, selectedQuantity - 1)" class="w-14 h-14 glass-card rounded-2xl flex items-center justify-center text-slate-400 hover:text-premium-gold hover:bg-slate-50 transition-all border-2 border-transparent hover:border-premium-gold/10">
+                                    <i data-lucide="minus" class="w-5 h-5"></i>
+                                </button>
+                                <input 
+                                    type="number" 
+                                    x-model="selectedQuantity" 
+                                    class="glass-input flex-1 h-14 rounded-2xl text-center text-2xl font-bold text-slate-700 border-2 border-slate-100 focus:border-premium-gold transition-all"
+                                    min="1"
+                                >
+                                <button @click="selectedQuantity++" class="w-14 h-14 glass-card rounded-2xl flex items-center justify-center text-slate-400 hover:text-premium-gold hover:bg-slate-50 transition-all border-2 border-transparent hover:border-premium-gold/10">
+                                    <i data-lucide="plus" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card-pink p-6 rounded-3xl border border-white/50 bg-gradient-to-br from-white/80 to-transparent">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-premium-gold/10 flex items-center justify-center text-premium-gold">
+                                    <i data-lucide="info" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700">Price Note</p>
+                                    <p class="text-[10px] text-slate-500 font-medium">Pricing will be entered manually in the cart.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button
                         @click="addToCart()"
                         :disabled="!selectedVariantId"
-                        class="flex-1 py-3 bg-gradient-to-r from-premium-gold to-premium-pink rounded-xl text-xs font-bold text-white uppercase tracking-widest disabled:opacity-50 hover:shadow-lg transition-all floating-sm">
+                        class="w-full py-6 bg-gradient-to-r from-premium-gold to-premium-pink rounded-3xl text-sm font-bold text-white uppercase tracking-[0.3em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 mt-10 floating-md">
                         Add to Cart
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+
 </div>
 
 <script>
@@ -275,15 +373,39 @@ function posSystem() {
         products: {{ products_json|safe }},
         activeCategory: 'all',
         searchQuery: '',
+        isSearchFocused: false,
         showVariantModal: false,
         selectedProduct: { name: '', variants: [] },
         selectedVariantId: null,
+        selectedQuantity: 1,
+        selectedColor: '',
+        recentColors: JSON.parse(localStorage.getItem('recentColors') || '[]'),
         cart: [],
         customer: { name: '', phone: '' },
         paymentType: 'full',
         amountPaid: '',
+        discount: 0,
+        manualTotal: '',
         searchResults: { products: [], orders: [] },
         
+        commonColors: [
+            { name: 'Red', hex: '#ef4444' },
+            { name: 'Pink', hex: '#f472b6' },
+            { name: 'Gold', hex: '#d4af37' },
+            { name: 'Blue', hex: '#3b82f6' },
+            { name: 'Green', hex: '#22c55e' },
+            { name: 'Black', hex: '#000000' },
+            { name: 'White', hex: '#ffffff' },
+            { name: 'Maroon', hex: '#800000' },
+            { name: 'Cream', hex: '#fffdd0' },
+            { name: 'Peach', hex: '#ffdab9' },
+            { name: 'Purple', hex: '#a855f7' },
+            { name: 'Brown', hex: '#78350f' },
+            { name: 'Gray', hex: '#64748b' },
+            { name: 'Navy', hex: '#1e3a8a' },
+            { name: 'Beige', hex: '#f5f5dc' },
+        ],
+
         async performSearch() {
             if (this.searchQuery.length < 2) {
                 this.searchResults = { products: [], orders: [] };
@@ -295,7 +417,7 @@ function posSystem() {
                 const data = await response.json();
                 this.searchResults = {
                     products: data.results.filter(r => r.type === 'Product' || r.type === 'Variant'),
-                    orders: data.results.filter(r => r.type === 'Order' && r.payment_status !== 'Paid')
+                    orders: data.results.filter(r => r.type === 'Order')
                 };
             } catch (e) {
                 console.error(e);
@@ -303,11 +425,11 @@ function posSystem() {
         },
         
         filteredProducts() {
+            const q = this.searchQuery.toLowerCase();
+            if (!q) return [];
             return this.products.filter(product => {
-                const matchesCategory = this.activeCategory === 'all' || product.category === this.activeCategory;
-                const q = this.searchQuery.toLowerCase();
-                if (!q) return matchesCategory;
-                return matchesCategory && product.name.toLowerCase().includes(q);
+                return product.name.toLowerCase().includes(q) || 
+                       product.variants.some(v => (v.color && v.color.toLowerCase().includes(q)) || (v.sku && v.sku.toLowerCase().includes(q)));
             });
         },
         
@@ -317,13 +439,31 @@ function posSystem() {
 
         selectProduct(product) {
             this.selectedProduct = product;
-            this.selectedVariantId = product.variants.length > 0 ? product.variants[0].id : null;
+            const defaultVariant = product.variants.length > 0 ? product.variants[0] : null;
+            this.selectedVariantId = defaultVariant ? defaultVariant.id : null;
+            this.selectedQuantity = 1;
+            this.selectedColor = defaultVariant ? defaultVariant.color : '';
             this.showVariantModal = true;
+            this.searchQuery = '';
+            this.isSearchFocused = false;
+            this.$nextTick(() => lucide.createIcons());
+        },
+
+        updateColor(variant) {
+            this.selectedVariantId = variant.id;
+            this.selectedColor = variant.color;
         },
 
         addToCart() {
             const variant = this.selectedProduct.variants.find(v => v.id == this.selectedVariantId);
             if (!variant) return;
+
+            // Track recent colors
+            if (!this.recentColors.includes(variant.color)) {
+                this.recentColors.unshift(variant.color);
+                this.recentColors = this.recentColors.slice(0, 5);
+                localStorage.setItem('recentColors', JSON.stringify(this.recentColors));
+            }
 
             this.cart.push({
                 product_id: this.selectedProduct.id,
@@ -331,11 +471,12 @@ function posSystem() {
                 name: this.selectedProduct.name,
                 variant: variant.color,
                 size: variant.size,
-                price: variant.price,
+                price: 0, // Set to 0, user will enter in cart
                 image: variant.image || this.selectedProduct.image || 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=150',
                 needs_stitching: false,
                 stitching_price: 0,
-                quantity: 1
+                show_cloth_price: false,
+                quantity: parseInt(this.selectedQuantity)
             });
             this.showVariantModal = false;
             window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Item added to cart', type: 'success' } }));
@@ -347,22 +488,30 @@ function posSystem() {
         },
 
         calculateSubtotal() {
-            return this.cart.reduce((acc, item) => acc + parseFloat(item.price), 0);
+            return this.cart.reduce((acc, item) => acc + (parseFloat(item.price) * parseInt(item.quantity)), 0);
         },
 
         calculateStitchingTotal() {
-            return this.cart.reduce((acc, item) => acc + parseFloat(item.stitching_price || 0), 0);
+            return this.cart.reduce((acc, item) => acc + (parseFloat(item.stitching_price || 0) * parseInt(item.quantity)), 0);
         },
 
         calculateTotal() {
-            return (this.calculateSubtotal() + this.calculateStitchingTotal()).toFixed(2);
+            if (this.manualTotal && parseFloat(this.manualTotal) > 0) {
+                const total = parseFloat(this.manualTotal) + this.calculateStitchingTotal();
+                return total.toFixed(2);
+            }
+            const total = this.calculateSubtotal() + this.calculateStitchingTotal();
+            const disc = parseFloat(this.discount || 0);
+            return (total - disc).toFixed(2);
         },
 
-        async checkout() {
+        async checkout(shouldPrint = true) {
             if (this.cart.length === 0) return;
 
-            // Open window before async call to bypass popup blocker
-            const invoiceWindow = window.open('about:blank', '_blank');
+            let invoiceWindow = null;
+            if (shouldPrint) {
+                invoiceWindow = window.open('about:blank', '_blank');
+            }
 
             try {
                 const response = await fetch('/checkout/', {
@@ -373,6 +522,8 @@ function posSystem() {
                     body: JSON.stringify({
                         cart: this.cart,
                         customer: this.customer,
+                        discount: this.discount,
+                        manual_total: this.manualTotal,
                         amount_paid: this.paymentType === 'partial' ? this.amountPaid : this.calculateTotal()
                     })
                 });
@@ -385,18 +536,19 @@ function posSystem() {
                     this.cart = [];
                     this.customer = { name: '', phone: '' };
                     
-                    // Set URL of the already opened window
-                    invoiceWindow.location.href = '/invoice/' + result.order_id + '/';
+                    if (shouldPrint && invoiceWindow) {
+                        invoiceWindow.location.href = '/invoice/' + result.order_id + '/';
+                    }
                     
                     setTimeout(() => window.location.reload(), 2000);
                 } else {
-                    invoiceWindow.close();
+                    if (invoiceWindow) invoiceWindow.close();
                     window.dispatchEvent(new CustomEvent('toast', { 
                         detail: { message: 'Checkout failed: ' + result.message, type: 'error' } 
                     }));
                 }
             } catch (error) {
-                invoiceWindow.close();
+                if (invoiceWindow) invoiceWindow.close();
                 console.error('Checkout error:', error);
                 window.dispatchEvent(new CustomEvent('toast', { 
                     detail: { message: 'A system error occurred. Please check your inventory or server.', type: 'error' } 
@@ -405,5 +557,6 @@ function posSystem() {
         }
     }
 }
+
 </script>
 {% endblock %}

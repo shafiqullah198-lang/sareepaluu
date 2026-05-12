@@ -1,0 +1,232 @@
+{% extends 'dashboard/base.html' %}
+
+{% block header %}Order Override & Returns{% endblock %}
+
+{% block content %}
+<style>
+    .allow-overflow { overflow: visible !important; }
+</style>
+<div x-data="orderOverrider()">
+    <!-- Step 1: Search Section -->
+    <div class="glass-card allow-overflow p-10 mb-8 floating-sm bg-gradient-to-br from-premium-pink/10 to-white/50 border-white/60">
+        <div class="flex flex-col items-center text-center mb-8">
+            <div class="w-20 h-20 bg-premium-gold/10 rounded-full flex items-center justify-center text-premium-gold mb-4 shadow-inner">
+                <i data-lucide="search" class="w-10 h-10"></i>
+            </div>
+            <h4 class="text-3xl font-bold text-slate-800 playfair mb-2">Find Order to Override</h4>
+            <p class="text-slate-500 max-w-lg">Search by Cloth Name, Color, Price, or Invoice Number to begin a return or replacement.</p>
+        </div>
+
+        <div class="relative max-w-2xl mx-auto z-[100]">
+            <div class="glass-input px-8 py-6 flex items-center gap-6 bg-white/90 shadow-2xl focus-within:ring-4 focus-within:ring-premium-gold/20 transition-all border-2 border-transparent focus-within:border-premium-gold/30">
+                <i data-lucide="search" class="w-6 h-6 text-slate-400"></i>
+                <input 
+                    type="text" 
+                    x-model="searchQuery" 
+                    @focus="isSearching = true"
+                    placeholder="e.g. Saree, Blue, 15000, INV-001..." 
+                    class="bg-transparent border-none focus:ring-0 text-xl font-bold text-slate-700 w-full p-0 outline-none placeholder:text-slate-300"
+                >
+            </div>
+
+            <!-- Search Results Dropdown -->
+            <div x-show="isSearching && searchQuery.length > 0" 
+                 class="absolute top-full left-0 right-0 mt-4 glass-card bg-white/95 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] z-[110] max-h-96 overflow-y-auto divide-y divide-slate-100 p-2"
+                 @click.away="isSearching = false"
+                 x-cloak
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0">
+                <template x-for="order in filteredOrders()" :key="order.id">
+                    <div @click="selectOrder(order)" class="p-5 hover:bg-premium-gold/10 rounded-2xl cursor-pointer transition-all flex items-center justify-between group border border-transparent hover:border-premium-gold/20">
+                        <div class="flex items-center gap-5">
+                            <div class="w-12 h-12 bg-premium-gold/5 rounded-xl flex items-center justify-center text-premium-gold group-hover:scale-110 transition-transform shadow-sm">
+                                <i data-lucide="receipt" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h6 class="text-sm font-bold text-slate-800" x-text="'Order: #' + order.token"></h6>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-0.5" x-text="order.customer + ' • ' + order.date"></p>
+                                <p class="text-[10px] text-premium-gold font-medium mt-1 italic" x-text="order.itemSummary"></p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-base font-bold text-slate-800" x-text="'Rs. ' + order.amount"></p>
+                            <span class="text-[9px] font-bold text-premium-pink-dark bg-premium-pink/20 px-2 py-0.5 rounded-full uppercase tracking-widest">Select</span>
+                        </div>
+                    </div>
+                </template>
+                <template x-if="filteredOrders().length === 0">
+                    <div class="p-10 text-center text-slate-400">
+                        <i data-lucide="search-x" class="w-10 h-10 mx-auto mb-2 opacity-30"></i>
+                        <p class="text-xs font-bold uppercase tracking-widest">No matching orders found</p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Selected Order & Action Section -->
+    <template x-if="selectedOrder">
+        <div class="animate-fade-in space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Order Preview -->
+                <div class="glass-card p-8 border-white/60">
+                    <div class="flex items-center justify-between mb-8">
+                        <h5 class="text-xl font-bold text-slate-800 playfair">Selected Order Details</h5>
+                        <button @click="selectedOrder = null" class="text-slate-400 hover:text-slate-600">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Order Token</p>
+                                <p class="text-lg font-bold text-slate-800" x-text="'#' + selectedOrder.token"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Date</p>
+                                <p class="text-sm font-bold text-slate-700" x-text="selectedOrder.date"></p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Purchased Items</p>
+                            <template x-for="item in selectedOrder.items" :key="item.id">
+                                <div class="flex items-center justify-between p-4 glass-card-pink border-white/40">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg bg-white/50 flex items-center justify-center text-premium-gold">
+                                            <i data-lucide="package" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-slate-700" x-text="item.name"></p>
+                                            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest" x-text="item.color"></p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-bold text-slate-800" x-text="'x' + item.quantity"></p>
+                                        <p class="text-[10px] text-slate-400" x-text="'Rs. ' + item.price"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="flex items-center justify-between p-6 bg-premium-gold/5 rounded-3xl border border-premium-gold/10">
+                            <p class="text-sm font-bold text-slate-700">Total Refundable Amount</p>
+                            <p class="text-2xl font-bold text-premium-gold" x-text="'Rs. ' + selectedOrder.amount"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Selection -->
+                <div class="glass-card p-8 border-white/60 bg-gradient-to-br from-white to-red-50/30">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center text-red-500">
+                            <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h5 class="text-xl font-bold text-slate-800 playfair">Override Action</h5>
+                            <p class="text-xs text-slate-500">Choose how to process this override.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Select Action Type</label>
+                            <select x-model="actionType" class="w-full glass-input p-4 text-sm font-bold text-slate-700 appearance-none bg-white">
+                                <option value="return">Return Items (Refund & Stock Back)</option>
+                                <option value="replace">Replace Items (Void & Load to POS)</option>
+                            </select>
+                        </div>
+
+                        <div class="p-6 bg-white/60 rounded-2xl border border-white/60 space-y-3">
+                            <template x-if="actionType === 'return'">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mt-0.5"></i>
+                                    <p class="text-xs text-slate-600 leading-relaxed">This will delete the order record, return all items to stock, and deduct the sale from your total revenue.</p>
+                                </div>
+                            </template>
+                            <template x-if="actionType === 'replace'">
+                                <div class="flex items-start gap-3">
+                                    <i data-lucide="info" class="w-4 h-4 text-blue-500 mt-0.5"></i>
+                                    <p class="text-xs text-slate-600 leading-relaxed">This will void the current order and return stock, but you will be redirected to the POS to create a new transaction for the customer.</p>
+                                </div>
+                            </template>
+                        </div>
+
+                        <button 
+                            @click="performAction()"
+                            class="w-full py-6 rounded-3xl btn-premium text-sm font-bold text-white uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all floating-md">
+                            Confirm Override Action
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+<script>
+function orderOverrider() {
+    return {
+        searchQuery: '',
+        isSearching: false,
+        selectedOrder: null,
+        actionType: 'return',
+        orders: [
+            {% for order in orders %}
+            {
+                id: {{ order.id }},
+                token: "{{ order.token_number|escapejs }}",
+                date: "{{ order.date|date:'M d, Y' }}",
+                customer: "{{ order.customer.name|default:'Walk-in'|escapejs }}",
+                amount: "{{ order.final_amount }}",
+                itemSummary: "{% for item in order.items.all %}{{ item.variant.product.name|escapejs }} ({{ item.variant.color|escapejs }}){% if not forloop.last %}, {% endif %}{% endfor %}",
+                items: [
+                    {% for item in order.items.all %}
+                    { 
+                        id: {{ item.id }},
+                        name: "{{ item.variant.product.name|escapejs }}", 
+                        color: "{{ item.variant.color|escapejs }}", 
+                        quantity: {{ item.quantity }},
+                        price: "{{ item.price }}"
+                    },
+                    {% endfor %}
+                ]
+            },
+            {% endfor %}
+        ],
+        
+        filteredOrders() {
+            const q = this.searchQuery.toLowerCase();
+            if (!q) return [];
+            return this.orders.filter(o => 
+                o.token.toLowerCase().includes(q) || 
+                o.customer.toLowerCase().includes(q) ||
+                o.amount.includes(q) ||
+                o.itemSummary.toLowerCase().includes(q)
+            ).slice(0, 5);
+        },
+
+        selectOrder(order) {
+            this.selectedOrder = order;
+            this.isSearching = false;
+            this.searchQuery = '';
+            this.$nextTick(() => lucide.createIcons());
+        },
+
+        performAction() {
+            if (!this.selectedOrder) return;
+            
+            if (this.actionType === 'return') {
+                window.location.href = `/order/void/${this.selectedOrder.id}/`;
+            } else {
+                // For replace, we might want to store items in session or just void and go to POS
+                // For now, void and redirect to POS
+                window.location.href = `/order/void/${this.selectedOrder.id}/?action=replace`;
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

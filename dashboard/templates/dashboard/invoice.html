@@ -1,12 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice - {{ order.token_number }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         tailwind.config = {
@@ -29,9 +32,11 @@
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
+
         .playfair {
             font-family: 'Playfair Display', serif;
         }
+
         .glass-invoice {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 200, 220, 0.1) 100%);
             backdrop-filter: blur(20px);
@@ -42,6 +47,7 @@
                 0 0 30px rgba(248, 200, 220, 0.2),
                 inset 0 1px 2px rgba(255, 255, 255, 0.9);
         }
+
         .glass-header {
             background: linear-gradient(135deg, rgba(248, 200, 220, 0.2) 0%, rgba(248, 200, 220, 0.05) 100%);
             border: 1px solid rgba(248, 200, 220, 0.3);
@@ -49,22 +55,27 @@
             padding: 16px;
             margin-bottom: 24px;
         }
+
         .glass-table-row {
             border-bottom: 1px solid rgba(248, 200, 220, 0.2);
         }
+
         .glass-summary {
             background: linear-gradient(135deg, rgba(183, 110, 121, 0.1) 0%, rgba(248, 200, 220, 0.1) 100%);
             border: 1px solid rgba(183, 110, 121, 0.3);
             border-radius: 16px;
             padding: 20px;
         }
+
         @media print {
             body {
                 background: white;
             }
+
             .no-print {
                 display: none !important;
             }
+
             .glass-invoice {
                 box-shadow: none !important;
                 border: 1px solid #e5e7eb !important;
@@ -72,27 +83,36 @@
                 background: white !important;
                 backdrop-filter: none;
             }
-            .glass-header, .glass-summary {
+
+            .glass-header,
+            .glass-summary {
                 background: #f9fafb !important;
                 border: 1px solid #e5e7eb !important;
             }
         }
     </style>
 </head>
+
 <body class="p-4 flex justify-center text-slate-800">
     <div class="w-full max-w-3xl glass-invoice rounded-3xl p-6">
         <!-- Header -->
         <div class="glass-header flex justify-between items-start mb-4">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-premium-pink shadow-sm overflow-hidden p-1 shrink-0">
-                    <img src="{% static 'images/sbp_logo.png' %}" alt="Logo" class="w-full h-full object-contain scale-125">
+                <div
+                    class="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-premium-pink shadow-sm overflow-hidden p-1 shrink-0">
+                    <img src="{% static 'images/sbp_logo.png' %}" alt="Logo"
+                        class="w-full h-full object-contain scale-125">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold playfair tracking-tight text-slate-800 leading-tight">Saree by Pallu</h1>
-                    <p class="text-[9px] uppercase tracking-[0.2em] text-premium-gold font-bold mb-1">Premium Collection</p>
+                    <h1 class="text-2xl font-bold playfair tracking-tight text-slate-800 leading-tight">Saree by Paalu
+                    </h1>
+                    <p class="text-[9px] uppercase tracking-[0.2em] text-premium-gold font-bold mb-1">Premium Collection
+                    </p>
                     <div class="flex flex-col text-[10px] text-slate-500 font-medium">
-                        <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-2 h-2"></i> Main Bazaar, City Center</span>
-                        <span class="flex items-center gap-1"><i data-lucide="phone" class="w-2 h-2"></i> +92 300 1234567</span>
+                        <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-2 h-2"></i> Shop #1
+                            street 2 moti plaza, moti bazar, rawalpindi</span>
+                        <span class="flex items-center gap-1"><i data-lucide="phone" class="w-2 h-2"></i> 0313-8822920 /
+                            03145720394</span>
                     </div>
                 </div>
             </div>
@@ -101,11 +121,14 @@
                 <div class="flex items-center justify-end gap-2">
                     <p class="text-xs font-bold text-premium-gold">#{{ order.token_number }}</p>
                     {% if order.payment_status == 'Paid' %}
-                    <span class="px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded-full uppercase tracking-wider">Paid</span>
+                    <span
+                        class="px-2 py-0.5 bg-green-100 text-green-700 text-[9px] font-bold rounded-full uppercase tracking-wider">Paid</span>
                     {% elif order.payment_status == 'Partial' %}
-                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-bold rounded-full uppercase tracking-wider">Partial</span>
+                    <span
+                        class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-bold rounded-full uppercase tracking-wider">Partial</span>
                     {% else %}
-                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[9px] font-bold rounded-full uppercase tracking-wider">Unpaid</span>
+                    <span
+                        class="px-2 py-0.5 bg-red-100 text-red-700 text-[9px] font-bold rounded-full uppercase tracking-wider">Unpaid</span>
                     {% endif %}
                 </div>
                 <p class="text-[10px] text-slate-500">{{ order.date|date:"d M Y, h:i A" }}</p>
@@ -126,7 +149,8 @@
         <!-- Items Table -->
         <table class="w-full text-left mb-4">
             <thead>
-                <tr class="glass-header border-b border-premium-pink/40 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                <tr
+                    class="glass-header border-b border-premium-pink/40 text-[9px] font-bold text-slate-500 uppercase tracking-widest">
                     <th class="py-2">Item Description</th>
                     <th class="py-2 text-center">Qty</th>
                     <th class="py-2 text-right">Price</th>
@@ -145,9 +169,9 @@
                     <td class="py-2 text-right text-xs">Rs.{{ item.price }}</td>
                     <td class="py-2 text-right text-xs">
                         {% if item.needs_stitching %}
-                            Rs.{{ item.stitching_price }}
+                        Rs.{{ item.stitching_price }}
                         {% else %}
-                            -
+                        -
                         {% endif %}
                     </td>
                     <td class="py-2 text-right text-xs font-bold text-premium-gold">
@@ -175,7 +199,7 @@
                     <span class="text-xs font-bold text-slate-800 uppercase tracking-widest">Total</span>
                     <span class="text-xs font-bold text-slate-800">Rs.{{ order.final_amount }}</span>
                 </div>
-                
+
                 <!-- Payment History -->
                 <div class="pt-2 space-y-1">
                     <p class="text-[8px] font-bold uppercase tracking-widest text-slate-400 mb-1">Payment History</p>
@@ -187,7 +211,8 @@
                     {% endfor %}
                 </div>
 
-                <div class="flex justify-between items-center pt-1 border-t border-white/40 text-[11px] font-bold text-green-600">
+                <div
+                    class="flex justify-between items-center pt-1 border-t border-white/40 text-[11px] font-bold text-green-600">
                     <span>Total Paid</span>
                     <span>Rs.{{ order.amount_paid }}</span>
                 </div>
@@ -199,31 +224,30 @@
         </div>
 
         <div class="mt-6 text-center text-[10px] font-medium text-slate-400 border-t border-slate-100 pt-4">
-            <p>Thank you for choosing Saree by Pallu!</p>
+            <p>Thank you for choosing Saree by Paalu!</p>
             <p class="mt-0.5">Please keep this invoice for your records.</p>
-            <div class="mt-6 border-t border-slate-200 pt-4 text-slate-400 text-[9px] uppercase tracking-widest font-bold flex items-center justify-center gap-3">
-                <span>Developer: shafiq ullah</span>
-                <span class="opacity-30">|</span>
-                <div class="flex items-center gap-1.5">
-                    <svg class="w-3 h-3 fill-slate-400" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                    <span>03480235167</span>
-                </div>
+            <div
+                class="mt-6 border-t border-slate-200 pt-4 text-slate-400 text-[9px] uppercase tracking-widest font-bold flex flex-col items-center justify-center gap-2 text-center">
+                <p>Developer: shafiq ullah | 0348-0235167</p>
             </div>
         </div>
 
         <!-- Print Button -->
         <div class="mt-8 flex justify-center gap-4 no-print">
-            <button onclick="window.print()" class="px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2 shadow-lg">
+            <button onclick="window.print()"
+                class="px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2 shadow-lg">
                 <i data-lucide="printer" class="w-4 h-4"></i> Print Invoice
             </button>
-            <button onclick="window.close()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
+            <button onclick="window.close()"
+                class="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-600 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors flex items-center gap-2">
                 Close
             </button>
         </div>
     </div>
-    
+
     <script>
         lucide.createIcons();
     </script>
 </body>
+
 </html>

@@ -35,6 +35,7 @@ class ProductVariant(models.Model):
     color = models.CharField(max_length=50)
     size = models.CharField(max_length=20)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
     stock = models.IntegerField(default=0)
     image = models.ImageField(upload_to='variants/', blank=True, null=True)
 
@@ -78,6 +79,19 @@ class Order(models.Model):
     def product_names(self):
         return ", ".join([item.variant.product.name for item in self.items.all()])
 
+    @property
+    def total_cost(self):
+        return sum([item.cost_price * item.quantity for item in self.items.all()])
+
+    @property
+    def total_stitching(self):
+        return sum([item.stitching_price * item.quantity for item in self.items.all()])
+
+    @property
+    def total_profit(self):
+        # Profit based on received payments: Paid - Cost
+        return self.amount_paid - self.total_cost
+
     def __str__(self):
         return self.token_number
 
@@ -96,6 +110,7 @@ class OrderItem(models.Model):
     variant = models.ForeignKey(ProductVariant, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Price at the time of order
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0) # Cost at the time of order
     needs_stitching = models.BooleanField(default=False)
     stitching_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     darzi = models.ForeignKey(Darzi, on_delete=models.SET_NULL, null=True, blank=True)
@@ -104,9 +119,15 @@ class OrderItem(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.order.token_number} - {self.variant.product.name}"    @property
+        return f"{self.order.token_number} - {self.variant.product.name}"
+
+    @property
     def total_price(self):
         return (self.price * self.quantity) + self.stitching_price
+
+    @property
+    def profit(self):
+        return (self.price - self.cost_price) * self.quantity
 
 class OrderPayment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='payments')

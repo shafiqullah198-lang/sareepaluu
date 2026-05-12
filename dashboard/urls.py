@@ -18,7 +18,8 @@ urlpatterns = [
     path('products/delete/<int:pk>/', views.delete_product, name='delete_product'),
     path('products/<int:product_pk>/variants/', views.manage_variants, name='manage_variants'),
     path('variants/delete/<int:pk>/', views.delete_variant, name='delete_variant'),
-    path('categories/', views.category_list, name='category_list'),
+    path('order/void/<int:pk>/', views.void_order, name='void_order'),
+    path('order/override/', views.void_orders_list, name='void_orders_list'),
     path('categories/delete/<int:pk>/', views.delete_category, name='delete_category'),
     path('subcategories/delete/<int:pk>/', views.delete_subcategory, name='delete_subcategory'),
     path('tailoring/', views.tailoring_view, name='tailoring'),
@@ -27,5 +28,6 @@ urlpatterns = [
     path('stitching/assign/<int:item_id>/', views.assign_darzi, name='assign_darzi'),
     path('stitching/delivery-date/<int:item_id>/', views.update_delivery_date, name='update_delivery_date'),
     path('expenses/', views.expenses_view, name='expenses'),
+    path('dues/', views.dues_list, name='dues'),
     path('api/order/payment/update/<int:order_id>/', views.update_payment, name='update_payment'),
 ]

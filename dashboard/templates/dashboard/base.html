@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,9 @@
     <!-- Tailwind Play CDN for development -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
     <!-- Alpine.js Plugins -->
     <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <!-- Alpine.js -->
@@ -22,8 +25,13 @@
             background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fae8ff 100%);
             min-height: 100vh;
         }
+
         .playfair {
             font-family: 'Playfair Display', serif;
+        }
+
+        [x-cloak] {
+            display: none !important;
         }
 
         /* Enhanced Glassmorphism Effects */
@@ -34,22 +42,24 @@
             border-right: 1px solid rgba(255, 105, 180, 0.15);
             border-top-right-radius: 32px;
             border-bottom-right-radius: 32px;
-            box-shadow: 
+            box-shadow:
                 15px 0 50px rgba(219, 39, 119, 0.25),
                 inset -2px 0 15px rgba(255, 192, 203, 0.1);
         }
-        
+
         /* Sidebar Typography Overrides for Dark Background */
         .glass-sidebar h1 {
             color: #FBCFE8 !important;
             text-shadow: 0 0 15px rgba(244, 114, 182, 0.5);
         }
+
         .glass-sidebar p,
         .glass-sidebar .text-slate-600,
         .glass-sidebar .text-slate-700,
         .glass-sidebar .text-slate-500 {
             color: rgba(252, 211, 227, 0.8) !important;
         }
+
         .glass-sidebar .glass-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(244, 114, 182, 0.2);
@@ -138,7 +148,7 @@
             transform: translateX(8px) scale(1.02);
             color: #ffffff !important;
             border: 1px solid rgba(244, 114, 182, 0.4);
-            box-shadow: 
+            box-shadow:
                 0 10px 30px rgba(236, 72, 153, 0.35),
                 inset 0 1px 2px rgba(255, 255, 255, 0.2);
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
@@ -166,7 +176,7 @@
             border: 1px solid rgba(244, 114, 182, 0.6);
             text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
         }
-        
+
         .glass-sidebar .nav-link.active i {
             filter: drop-shadow(0 0 12px rgba(244, 114, 182, 0.9));
             color: #ffffff;
@@ -237,7 +247,10 @@
             outline: none !important;
         }
 
-        input:focus, select:focus, textarea:focus, button:focus {
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus {
             outline: none !important;
             box-shadow: none !important;
         }
@@ -279,27 +292,33 @@
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: transparent;
         }
+
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, rgba(183, 110, 121, 0.3), rgba(248, 200, 220, 0.2));
             border-radius: 10px;
             border: 2px solid transparent;
             background-clip: padding-box;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, rgba(183, 110, 121, 0.5), rgba(248, 200, 220, 0.4));
             background-clip: padding-box;
         }
+
         /* Hide scrollbars but keep functionality */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
+
         .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
         /* Hide scrollbar for Chrome, Safari and Opera */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
@@ -307,8 +326,10 @@
 
         /* Hide scrollbar for IE, Edge and Firefox */
         .scrollbar-hide {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
         }
     </style>
     <script>
@@ -360,23 +381,30 @@
         }
     </script>
 </head>
+
 <body class="antialiased">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <aside class="w-72 glass-sidebar fixed inset-y-0 left-0 z-50 flex flex-col">
             <div class="p-8">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 glass-card bg-gradient-to-br from-pink-600/30 to-purple-900/40 border-pink-400/30 shadow-[0_0_15px_rgba(219,39,119,0.3)] flex items-center justify-center overflow-hidden shrink-0">
-                        <img src="{% static 'images/sbp_logo.png' %}" alt="SBP" class="w-full h-full object-contain scale-[1.6]">
+                    <div
+                        class="w-12 h-12 glass-card bg-gradient-to-br from-pink-600/30 to-purple-900/40 border-pink-400/30 shadow-[0_0_15px_rgba(219,39,119,0.3)] flex items-center justify-center overflow-hidden shrink-0">
+                        <img src="{% static 'images/sbp_logo.png' %}" alt="SBP"
+                            class="w-full h-full object-contain scale-[1.6]">
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold text-white playfair tracking-tight leading-tight">Saree by Pallu</h1>
-                        <p class="text-[9px] uppercase tracking-[0.2em] text-pink-200 font-medium">Premium Collection</p>
+                        <h1 class="text-xl font-extrabold text-white playfair tracking-tight leading-tight">Saree by
+                            Paalu</h1>
+                        <p class="text-[10px] uppercase tracking-[0.2em] text-pink-200 font-semibold">Premium Collection
+                        </p>
                         <div class="mt-3 pt-3 border-t border-white/20">
-                            <p class="text-[10px] text-white uppercase tracking-widest font-semibold">Dev: shafiq ullah</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <svg class="w-3 h-3 fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                                <p class="text-[10px] text-white tracking-widest font-semibold">03480235167</p>
+                            <p class="text-[10px] text-white uppercase tracking-widest font-semibold">Dev: shafiq ullah
+                            </p>
+                            <div class="flex items-center gap-1.5 mt-1.5">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                                    class="w-3.5 h-3.5" alt="WA">
+                                <p class="text-[10px] text-pink-100 font-bold tracking-widest">0348-0235167</p>
                             </div>
                         </div>
                     </div>
@@ -384,51 +412,67 @@
             </div>
 
             <nav class="flex-1 px-4 space-y-1 overflow-y-auto scrollbar-hide" style="max-height: calc(100vh - 250px);">
-                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'dashboard' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{% url 'pos' %}" class="nav-link {% if request.resolver_match.url_name == 'pos' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'pos' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'pos' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                     <span>POS System</span>
                 </a>
-                <a href="{% url 'products' %}" class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'products' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="package" class="w-5 h-5"></i>
                     <span>Products</span>
                 </a>
-                <a href="{% url 'category_list' %}" class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
-                    <i data-lucide="layers" class="w-5 h-5"></i>
-                    <span>Categories</span>
-                </a>
-                <a href="{% url 'tailoring' %}" class="nav-link {% if request.resolver_match.url_name == 'tailoring' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'tailoring' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'tailoring' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="scissors" class="w-5 h-5"></i>
                     <span>Tailoring Center</span>
                 </a>
-                <a href="{% url 'inventory' %}" class="nav-link {% if request.resolver_match.url_name == 'inventory' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'inventory' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'inventory' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="database" class="w-5 h-5"></i>
-                    <span>Inventory</span>
+                    <span>Stock Levels</span>
                 </a>
-                <a href="{% url 'sales' %}" class="nav-link {% if request.resolver_match.url_name == 'sales' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'dues' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'dues' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                    <i data-lucide="wallet" class="w-5 h-5 text-red-500"></i>
+                    <span>Manage Dues</span>
+                </a>
+                <a href="{% url 'sales' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'sales' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
                     <span>Sales Records</span>
                 </a>
-                <a href="{% url 'customers' %}" class="nav-link {% if request.resolver_match.url_name == 'customers' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'customers' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'customers' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="users" class="w-5 h-5"></i>
                     <span>Customers</span>
                 </a>
-                <a href="{% url 'expenses' %}" class="nav-link {% if request.resolver_match.url_name == 'expenses' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                <a href="{% url 'expenses' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'expenses' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
                     <i data-lucide="wallet" class="w-5 h-5"></i>
                     <span>Expenses</span>
+                </a>
+                <a href="{% url 'void_orders_list' %}"
+                    class="nav-link {% if request.resolver_match.url_name == 'void_orders_list' %}active{% endif %} flex items-center gap-4 px-6 py-3.5 rounded-2xl text-slate-600">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                    <span>Order Override</span>
                 </a>
             </nav>
 
             <div class="p-6">
                 <div class="glass-card p-4 flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-white/20 border border-white/40 overflow-hidden shadow-sm flex items-center justify-center">
-                        <img src="{% static 'images/sbp_logo.png' %}" alt="Logo" class="w-full h-full object-contain scale-[1.8]">
+                    <div
+                        class="w-10 h-10 rounded-full bg-white/20 border border-white/40 overflow-hidden shadow-sm flex items-center justify-center">
+                        <img src="{% static 'images/sbp_logo.png' %}" alt="Logo"
+                            class="w-full h-full object-contain scale-[1.8]">
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-slate-700 truncate">Saree by Pallu</p>
+                        <p class="text-sm font-semibold text-slate-700 truncate">Saree by Paalu</p>
                         <p class="text-[10px] text-slate-500 font-medium">Administrator</p>
                     </div>
                 </div>
@@ -440,47 +484,58 @@
             <!-- Top Bar -->
             <header class="flex items-center justify-between mb-10">
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-800 playfair tracking-tight">{% block header %}Welcome Back, Saree by Pallu 👋{% endblock %}</h2>
+                    <h2 class="text-3xl font-bold text-slate-800 playfair tracking-tight">{% block header %}Welcome
+                        Back, Saree by Paalu 👋{% endblock %}</h2>
                     <p class="text-slate-500 text-sm mt-1">Here's what's happening in your boutique today.</p>
                 </div>
-                
+
                 <div class="flex items-center gap-4">
-                    <div class="relative" x-data="globalSearch()" @open-payment.window="openPaymentModal($event.detail)">
-                        <div class="glass-card px-4 py-2 flex items-center gap-3 w-64 lg:w-80 transition-all focus-within:ring-2 focus-within:ring-premium-gold/50">
+                    <div class="relative" x-data="globalSearch()"
+                        @open-payment.window="openPaymentModal($event.detail)">
+                        <div
+                            class="glass-card px-4 py-2 flex items-center gap-3 w-64 lg:w-80 transition-all focus-within:ring-2 focus-within:ring-premium-gold/50">
                             <i data-lucide="search" class="w-5 h-5 text-slate-400"></i>
-                            <input type="text" x-model="query" @input.debounce.300ms="performSearch" placeholder="Search products, colors, customers..." class="bg-transparent border-none focus:ring-0 text-sm text-slate-600 w-full outline-none">
-                            <div x-show="loading" class="w-4 h-4 border-2 border-premium-gold/30 border-t-premium-gold rounded-full animate-spin" x-cloak></div>
+                            <input type="text" x-model="query" @input.debounce.300ms="performSearch"
+                                placeholder="Search products, colors, customers..."
+                                class="bg-transparent border-none focus:ring-0 text-sm text-slate-600 w-full outline-none">
+                            <div x-show="loading"
+                                class="w-4 h-4 border-2 border-premium-gold/30 border-t-premium-gold rounded-full animate-spin"
+                                x-cloak></div>
                         </div>
-                        
+
                         <!-- Dropdown -->
-                        <div x-show="isOpen && query.length > 0" @click.away="isOpen = false" class="absolute top-full mt-2 w-full glass-card bg-white/95 border border-white/50 shadow-2xl rounded-2xl overflow-hidden z-50 divide-y divide-slate-100" x-cloak x-transition>
+                        <div x-show="isOpen && query.length > 0" @click.away="isOpen = false"
+                            class="absolute top-full mt-2 w-full glass-card bg-white/95 border border-white/50 shadow-2xl rounded-2xl overflow-hidden z-50 divide-y divide-slate-100"
+                            x-cloak x-transition>
                             <template x-if="results.length === 0 && !loading">
                                 <div class="p-4 text-center text-sm text-slate-500">
                                     No results found for "<span x-text="query" class="font-bold"></span>"
                                 </div>
                             </template>
                             <template x-for="result in results" :key="result.url + result.title">
-                                <div class="p-3 hover:bg-premium-pink/10 transition-colors flex items-center justify-between group">
+                                <div
+                                    class="p-3 hover:bg-premium-pink/10 transition-colors flex items-center justify-between group">
                                     <a :href="result.url" class="flex items-start gap-3 flex-1 min-w-0">
-                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" 
-                                             :class="{
+                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                                            :class="{
                                                 'bg-blue-50 text-blue-500': result.type === 'Product',
                                                 'bg-purple-50 text-purple-500': result.type === 'Variant',
                                                 'bg-green-50 text-green-500': result.type === 'Customer',
                                                 'bg-orange-50 text-orange-500': result.type === 'Order'
                                              }">
-                                             <i :data-lucide="getIcon(result.type)" class="w-4 h-4"></i>
+                                            <i :data-lucide="getIcon(result.type)" class="w-4 h-4"></i>
                                         </div>
                                         <div class="min-w-0 flex-1">
-                                            <h6 class="text-sm font-bold text-slate-700 truncate" x-text="result.title"></h6>
-                                            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest mt-0.5 truncate" x-text="result.type + ' • ' + result.subtitle"></p>
+                                            <h6 class="text-sm font-bold text-slate-700 truncate" x-text="result.title">
+                                            </h6>
+                                            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-widest mt-0.5 truncate"
+                                                x-text="result.type + ' • ' + result.subtitle"></p>
                                         </div>
                                     </a>
-                                    
+
                                     <!-- Quick Action for Partial Orders -->
                                     <template x-if="result.type === 'Order' && result.payment_status !== 'Paid'">
-                                        <button 
-                                            @click.stop="openPaymentModal(result)"
+                                        <button @click.stop="openPaymentModal(result)"
                                             class="ml-2 px-3 py-1.5 bg-premium-gold text-white text-[9px] font-bold rounded-lg uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
                                             Pay Balance
                                         </button>
@@ -490,35 +545,46 @@
                         </div>
 
                         <!-- Global Payment Modal -->
-                        <div x-show="payModal.isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" x-cloak x-transition>
-                            <div class="glass-card w-full max-w-md p-8 bg-white/95" @click.away="payModal.isOpen = false">
+                        <div x-show="payModal.isOpen"
+                            class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+                            x-cloak x-transition>
+                            <div class="glass-card w-full max-w-md p-8 bg-white/95"
+                                @click.away="payModal.isOpen = false">
                                 <div class="flex items-center justify-between mb-6">
                                     <h5 class="text-xl font-bold text-slate-800 playfair">Complete Payment</h5>
-                                    <button @click="payModal.isOpen = false" class="text-slate-400 hover:text-slate-600">
+                                    <button @click="payModal.isOpen = false"
+                                        class="text-slate-400 hover:text-slate-600">
                                         <i data-lucide="x" class="w-5 h-5"></i>
                                     </button>
                                 </div>
-                                
+
                                 <div class="mb-6">
-                                    <p class="text-sm text-slate-500">Order: <span class="font-bold text-slate-700" x-text="'#' + payModal.orderToken"></span></p>
-                                    <p class="text-sm text-slate-500">Balance Due: <span class="font-bold text-red-500" x-text="'Rs. ' + payModal.balance"></span></p>
+                                    <p class="text-sm text-slate-500">Order: <span class="font-bold text-slate-700"
+                                            x-text="'#' + payModal.orderToken"></span></p>
+                                    <p class="text-sm text-slate-500">Balance Due: <span class="font-bold text-red-500"
+                                            x-text="'Rs. ' + payModal.balance"></span></p>
                                 </div>
 
                                 <div class="space-y-4">
                                     <div>
-                                        <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Amount to Pay</label>
+                                        <label
+                                            class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Amount
+                                            to Pay</label>
                                         <div class="relative">
-                                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">Rs.</span>
-                                            <input type="number" x-model="payModal.amount" class="w-full pl-12 pr-4 py-3 glass-input text-lg font-bold text-slate-700">
+                                            <span
+                                                class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">Rs.</span>
+                                            <input type="number" x-model="payModal.amount"
+                                                class="w-full pl-12 pr-4 py-3 glass-input text-lg font-bold text-slate-700">
                                         </div>
                                     </div>
-                                    
-                                    <button 
-                                        @click="submitPayment()"
+
+                                    <button @click="submitPayment()"
                                         :disabled="payModal.loading || !payModal.amount || payModal.amount <= 0"
                                         class="w-full py-4 btn-premium rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 disabled:opacity-50">
                                         <span x-show="!payModal.loading">Confirm & Print Invoice</span>
-                                        <div x-show="payModal.loading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <div x-show="payModal.loading"
+                                            class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin">
+                                        </div>
                                     </button>
                                 </div>
                             </div>
@@ -526,16 +592,23 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="relative" x-data="notificationsComponent()" x-init="fetchNotifications()">
-                            <button @click="isOpen = !isOpen" @click.away="isOpen = false" class="w-12 h-12 glass-card flex items-center justify-center text-slate-600 hover:text-premium-gold transition-colors relative">
+                            <button @click="isOpen = !isOpen" @click.away="isOpen = false"
+                                class="w-12 h-12 glass-card flex items-center justify-center text-slate-600 hover:text-premium-gold transition-colors relative">
                                 <i data-lucide="bell" class="w-5 h-5"></i>
-                                <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute top-2 right-2 w-4 h-4 bg-red-400 text-white text-[9px] font-bold rounded-full border-2 border-white flex items-center justify-center" x-cloak></span>
+                                <span x-show="unreadCount > 0" x-text="unreadCount"
+                                    class="absolute top-2 right-2 w-4 h-4 bg-red-400 text-white text-[9px] font-bold rounded-full border-2 border-white flex items-center justify-center"
+                                    x-cloak></span>
                             </button>
-                            
+
                             <!-- Dropdown -->
-                            <div x-show="isOpen" class="absolute right-0 top-full mt-2 w-80 glass-card bg-white/95 border border-white/50 shadow-2xl rounded-2xl overflow-hidden z-50 divide-y divide-slate-100" x-cloak x-transition>
+                            <div x-show="isOpen"
+                                class="absolute right-0 top-full mt-2 w-80 glass-card bg-white/95 border border-white/50 shadow-2xl rounded-2xl overflow-hidden z-50 divide-y divide-slate-100"
+                                x-cloak x-transition>
                                 <div class="p-4 flex items-center justify-between bg-white/50 border-b border-white/50">
                                     <h6 class="font-bold text-slate-800">Notifications</h6>
-                                    <button @click="markAllRead()" class="text-[10px] font-bold uppercase tracking-widest text-premium-gold hover:text-premium-gold/70">Mark All Read</button>
+                                    <button @click="markAllRead()"
+                                        class="text-[10px] font-bold uppercase tracking-widest text-premium-gold hover:text-premium-gold/70">Mark
+                                        All Read</button>
                                 </div>
                                 <div class="max-h-96 overflow-y-auto">
                                     <template x-if="notifications.length === 0">
@@ -545,25 +618,32 @@
                                         </div>
                                     </template>
                                     <template x-for="notif in notifications" :key="notif.id">
-                                        <a :href="notif.url" class="p-4 hover:bg-premium-pink/10 transition-colors flex items-start gap-3">
-                                            <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" 
-                                                 :class="notif.type === 'alert' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'">
-                                                <i :data-lucide="notif.type === 'alert' ? 'alert-triangle' : 'shopping-bag'" class="w-4 h-4"></i>
+                                        <a :href="notif.url"
+                                            class="p-4 hover:bg-premium-pink/10 transition-colors flex items-start gap-3">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                                                :class="notif.type === 'alert' ? 'bg-red-50 text-red-500' : 'bg-blue-50 text-blue-500'">
+                                                <i :data-lucide="notif.type === 'alert' ? 'alert-triangle' : 'shopping-bag'"
+                                                    class="w-4 h-4"></i>
                                             </div>
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex items-center justify-between gap-2">
-                                                    <h6 class="text-xs font-bold text-slate-700 truncate" x-text="notif.title"></h6>
-                                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap" x-text="notif.time"></span>
+                                                    <h6 class="text-xs font-bold text-slate-700 truncate"
+                                                        x-text="notif.title"></h6>
+                                                    <span
+                                                        class="text-[9px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap"
+                                                        x-text="notif.time"></span>
                                                 </div>
-                                                <p class="text-[11px] text-slate-500 font-medium leading-snug mt-0.5 line-clamp-2" x-text="notif.message"></p>
+                                                <p class="text-[11px] text-slate-500 font-medium leading-snug mt-0.5 line-clamp-2"
+                                                    x-text="notif.message"></p>
                                             </div>
                                         </a>
                                     </template>
                                 </div>
                             </div>
                         </div>
-                        
-                        <a href="{% url 'expenses' %}" class="w-12 h-12 glass-card flex items-center justify-center text-slate-600 hover:text-premium-gold transition-colors">
+
+                        <a href="{% url 'expenses' %}"
+                            class="w-12 h-12 glass-card flex items-center justify-center text-slate-600 hover:text-premium-gold transition-colors">
                             <i data-lucide="calendar" class="w-5 h-5"></i>
                         </a>
                     </div>
@@ -589,13 +669,11 @@
                     this.toasts = this.toasts.filter(t => t.id !== id);
                 }, 5000);
             } 
-        }" 
-        @toast.window="addToast($event.detail.message, $event.detail.type)"
+        }" @toast.window="addToast($event.detail.message, $event.detail.type)"
         class="fixed bottom-8 right-8 z-[100] space-y-4 w-80">
-        
+
         <template x-for="toast in toasts" :key="toast.id">
-            <div 
-                x-transition:enter="transition ease-out duration-300"
+            <div x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"
                 x-transition:enter-end="opacity-100 transform translate-y-0 scale-100"
                 x-transition:leave="transition ease-in duration-200"
@@ -603,18 +681,20 @@
                 x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"
                 class="glass-card p-4 shadow-2xl border-white/60 flex items-center gap-4 bg-white/90"
                 :class="{ 'border-l-4 border-l-premium-gold': toast.type === 'success', 'border-l-4 border-l-red-400': toast.type === 'error' }">
-                
+
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                     :class="{ 'bg-premium-pink/30 text-premium-gold': toast.type === 'success', 'bg-red-50 text-red-400': toast.type === 'error' }">
+                    :class="{ 'bg-premium-pink/30 text-premium-gold': toast.type === 'success', 'bg-red-50 text-red-400': toast.type === 'error' }">
                     <i :data-lucide="toast.type === 'success' ? 'check-circle' : 'alert-circle'" class="w-6 h-6"></i>
                 </div>
-                
+
                 <div>
-                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-widest" x-text="toast.type === 'success' ? 'Success' : 'Attention'"></h5>
+                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-widest"
+                        x-text="toast.type === 'success' ? 'Success' : 'Attention'"></h5>
                     <p class="text-xs text-slate-500 font-medium mt-0.5" x-text="toast.message"></p>
                 </div>
 
-                <button @click="toasts = toasts.filter(t => t.id !== toast.id)" class="ml-auto text-slate-300 hover:text-slate-500">
+                <button @click="toasts = toasts.filter(t => t.id !== toast.id)"
+                    class="ml-auto text-slate-300 hover:text-slate-500">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -659,8 +739,8 @@
                         });
                         const data = await response.json();
                         if (data.status === 'success') {
-                            window.dispatchEvent(new CustomEvent('toast', { 
-                                detail: { message: data.message, type: 'success' } 
+                            window.dispatchEvent(new CustomEvent('toast', {
+                                detail: { message: data.message, type: 'success' }
                             }));
                             this.payModal.isOpen = false;
                             // Open invoice in new tab
@@ -668,8 +748,8 @@
                             // Optional: reload or refresh search
                             setTimeout(() => window.location.reload(), 1500);
                         } else {
-                            window.dispatchEvent(new CustomEvent('toast', { 
-                                detail: { message: data.message, type: 'error' } 
+                            window.dispatchEvent(new CustomEvent('toast', {
+                                detail: { message: data.message, type: 'error' }
                             }));
                         }
                     } catch (e) {
@@ -719,10 +799,10 @@
                         const response = await fetch('/api/notifications/');
                         const data = await response.json();
                         this.notifications = data.notifications;
-                        
+
                         const readAt = localStorage.getItem('notificationsReadAt') || 0;
                         this.unreadCount = this.notifications.filter(n => (n.timestamp * 1000) > readAt).length;
-                        
+
                         this.$nextTick(() => lucide.createIcons());
                     } catch (e) {
                         console.error('Failed to fetch notifications', e);
@@ -736,4 +816,5 @@
         }
     </script>
 </body>
+
 </html>
