@@ -347,7 +347,13 @@
             *,
             *::before,
             *::after {
+                box-sizing: border-box;
                 min-width: 0;
+            }
+
+            .sidebar-active .dashboard-main {
+                position: relative;
+                z-index: 1;
             }
 
             .dashboard-sidebar {
@@ -355,6 +361,7 @@
                 max-width: 86vw;
                 transform: translateX(-110%);
                 transition: transform 0.28s ease;
+                z-index: 90 !important;
             }
 
             .dashboard-sidebar.is-open {
@@ -372,7 +379,7 @@
                 align-items: flex-start;
                 gap: 1rem;
                 flex-wrap: wrap;
-                padding-left: 3.25rem;
+                padding-left: 0;
             }
 
             .dashboard-topbar h2 {
@@ -382,6 +389,7 @@
 
             .dashboard-topbar>div:first-child {
                 max-width: 100%;
+                padding-left: 3.75rem;
             }
 
             .dashboard-topbar>div:last-child {
@@ -392,6 +400,15 @@
 
             .global-search-card {
                 width: min(100%, 20rem) !important;
+                min-height: 3rem;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+                gap: 0.75rem !important;
+            }
+
+            .global-search-card input {
+                min-width: 0;
+                width: 100%;
             }
 
             .global-search-menu,
@@ -409,7 +426,7 @@
                 position: fixed;
                 top: 1rem;
                 left: 1rem;
-                z-index: 80;
+                z-index: 100;
                 width: 2.75rem;
                 height: 2.75rem;
                 align-items: center;
@@ -419,7 +436,7 @@
             .mobile-sidebar-backdrop {
                 position: fixed;
                 inset: 0;
-                z-index: 40;
+                z-index: 80;
                 background: rgba(15, 23, 42, 0.35);
                 backdrop-filter: blur(6px);
                 -webkit-backdrop-filter: blur(6px);
@@ -450,10 +467,9 @@
                 max-width: 100%;
             }
 
-            .dashboard-main .glass-card.flex,
+            .dashboard-main .glass-card.flex:not(.global-search-card):not(.mobile-menu-toggle),
             .dashboard-main .flex.items-center.justify-between,
-            .dashboard-main .flex.items-center.gap-4,
-            .dashboard-main .flex.items-center.gap-3 {
+            .dashboard-main .flex.items-center.gap-4 {
                 flex-wrap: wrap;
             }
 
@@ -476,7 +492,11 @@
 
             .dashboard-topbar {
                 margin-bottom: 1.5rem;
-                padding-left: 3rem;
+                padding-left: 0;
+            }
+
+            .dashboard-topbar>div:first-child {
+                padding-left: 4rem;
             }
 
             .dashboard-topbar h2 {
@@ -492,8 +512,13 @@
                 gap: 0.75rem;
             }
 
+            .dashboard-topbar>div:last-child>div:first-child {
+                width: 100%;
+            }
+
             .global-search-card {
                 width: 100% !important;
+                min-height: 3.5rem;
                 padding-left: 0.875rem !important;
                 padding-right: 0.875rem !important;
             }
@@ -627,7 +652,8 @@
     </script>
 </head>
 
-<body class="antialiased" x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false">
+<body class="antialiased" x-data="{ sidebarOpen: false }" :class="{ 'sidebar-active': sidebarOpen }"
+    @keydown.escape.window="sidebarOpen = false">
     <button type="button" class="mobile-menu-toggle glass-card text-slate-700" @click="sidebarOpen = true"
         aria-label="Open navigation">
         <i data-lucide="menu" class="w-5 h-5"></i>
