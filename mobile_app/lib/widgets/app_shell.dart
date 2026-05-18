@@ -263,10 +263,10 @@ class _AppShellState extends State<AppShell> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _bottomNavItem(0, Icons.dashboard_outlined, 'Dashboard', currentIndex),
-              _bottomNavItem(1, Icons.shopping_cart_outlined, 'POS System', currentIndex),
+              _bottomNavItem(9, Icons.rotate_left, 'Order Override', currentIndex),
               _buildFab(context),
               _bottomNavItem(6, Icons.receipt_long_outlined, 'Orders', currentIndex),
-              _bottomNavItem(9, Icons.grid_view_rounded, 'More', currentIndex),
+              _bottomNavItem(8, Icons.attach_money_outlined, 'Expenses', currentIndex),
             ],
           ),
         ),

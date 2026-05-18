@@ -56,6 +56,39 @@
             box-shadow: 0 10px 25px rgba(183, 110, 121, 0.25);
             transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
+
+        @media (max-width: 767px) {
+            html,
+            body {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            main {
+                padding: 1rem !important;
+            }
+
+            section.glass-card {
+                max-width: 100%;
+                padding: 1.5rem !important;
+                border-radius: 22px;
+            }
+
+            h1 {
+                font-size: 1.35rem !important;
+                line-height: 1.7rem !important;
+            }
+
+            h2 {
+                font-size: 1.75rem !important;
+                line-height: 2.15rem !important;
+            }
+
+            input,
+            button {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 

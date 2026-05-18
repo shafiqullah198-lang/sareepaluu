@@ -13,6 +13,12 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  String _chartLabel(dynamic value) {
+    final label = value?.toString() ?? '';
+    final end = label.length < 3 ? label.length : 3;
+    return label.substring(0, end).toUpperCase();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -276,7 +282,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                c['label']?.toString().substring(0, 3).toUpperCase() ?? '',
+                                _chartLabel(c['label']),
                                 style: const TextStyle(fontSize: 8, color: AppColors.slate400, fontWeight: FontWeight.bold),
                               ),
                             ],

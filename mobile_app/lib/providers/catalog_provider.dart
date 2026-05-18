@@ -43,7 +43,9 @@ class CatalogProvider extends ChangeNotifier {
             .where((p) =>
                 p.name.toLowerCase().contains(q) ||
                 (p.categoryName ?? '').toLowerCase().contains(q) ||
-                p.variants.any((v) => v.sku.toLowerCase().contains(q) || v.color.toLowerCase().contains(q)))
+                p.variants.any((v) =>
+                    v.sku.toLowerCase().contains(q) ||
+                    v.color.toLowerCase().contains(q)))
             .toList();
       }
       loading = false;
@@ -68,5 +70,24 @@ class CatalogProvider extends ChangeNotifier {
           .toList();
     }
     notifyListeners();
+  }
+
+  Future<void> updateVariantStock(int variantId, int stock) async {
+    loading = true;
+    error = null;
+    notifyListeners();
+    try {
+      await _api
+          .patch('/products/variants/$variantId/', data: {'stock': stock});
+      await load();
+    } on ApiException catch (e) {
+      error = e.message;
+      loading = false;
+      notifyListeners();
+    } catch (e) {
+      error = 'Could not update stock. Please try again.';
+      loading = false;
+      notifyListeners();
+    }
   }
 }
