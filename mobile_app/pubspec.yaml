@@ -1,0 +1,26 @@
+name: saree_paluu_pos
+description: Mobile POS app for the existing Django ERP backend.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  dio: ^5.7.0
+  shared_preferences: ^2.3.3
+  intl: ^0.19.0
+  google_fonts: ^8.1.0
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+

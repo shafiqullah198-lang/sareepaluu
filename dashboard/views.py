@@ -10,6 +10,20 @@ from .forms import ProductForm, VariantForm, CategoryForm, SubCategoryForm, Darz
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import logout as session_logout
+from django.shortcuts import resolve_url
+
+
+def login_view(request):
+    next_url = request.GET.get('next') or resolve_url('dashboard')
+    if request.user.is_authenticated:
+        return redirect(next_url)
+    return render(request, 'dashboard/login.html', {'next_url': next_url})
+
+
+def logout_view(request):
+    session_logout(request)
+    return redirect('login')
 
 def expenses_view(request):
     view_type = request.GET.get('view', 'monthly')

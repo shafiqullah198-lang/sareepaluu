@@ -24,6 +24,7 @@ from django.urls import re_path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/v1/', include('backend.api.v1.urls')),
     path('', include('dashboard.urls')),
     # Serve media files even in production mode for desktop app
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),

@@ -472,9 +472,12 @@
                             class="w-full h-full object-contain scale-[1.8]">
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold text-slate-700 truncate">Saree by Paalu</p>
-                        <p class="text-[10px] text-slate-500 font-medium">Administrator</p>
+                        <p class="text-sm font-semibold text-slate-700 truncate">{{ request.user.get_full_name|default:request.user.username }}</p>
+                        <p class="text-[10px] text-slate-500 font-medium">{% if request.user.is_superuser %}Superuser{% elif request.user.is_staff %}Staff{% else %}User{% endif %}</p>
                     </div>
+                    <a href="{% url 'logout' %}" class="text-pink-100/70 hover:text-white transition-colors" title="Logout">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </a>
                 </div>
             </div>
         </aside>
