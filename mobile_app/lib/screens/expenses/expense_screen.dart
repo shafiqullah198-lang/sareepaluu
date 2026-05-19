@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/glass_widgets.dart';
 import '../../core/theme/reusable_components.dart';
+import '../../providers/dashboard_provider.dart';
 import '../../providers/expense_provider.dart';
 import '../../widgets/state_views.dart';
 
@@ -19,14 +20,25 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<ExpenseProvider>().load();
+      if (!mounted) return;
+      context.read<ExpenseProvider>().load();
+
+      final dashboard = context.read<DashboardProvider>();
+      if (dashboard.summary.isEmpty && !dashboard.loading) {
+        dashboard.load();
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ExpenseProvider>();
+    final dashboard = context.watch<DashboardProvider>();
     final total = provider.expenses.fold(0.0, (sum, e) => sum + e.amount);
+    final revenue =
+        (dashboard.summary['total_revenue'] as num?)?.toDouble() ?? 0.0;
+    final netProfit = revenue - total;
+    final expenseCount = provider.expenses.length;
 
     return PremiumPage(
       title: 'Expenses',
@@ -35,6 +47,56 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           ? const LoadingView()
           : Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: GlassCard(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Financial Summary',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.slate800,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _SummaryStatCard(
+                                label: 'Total Sales',
+                                value: 'Rs. ${revenue.toStringAsFixed(0)}',
+                                subtitle: 'Gross revenue',
+                                icon: Icons.payments_outlined,
+                                tint: const Color(0xFFDCFCE7),
+                                iconColor: const Color(0xFF16A34A),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _SummaryStatCard(
+                                label: 'Net Profit',
+                                value: 'Rs. ${netProfit.toStringAsFixed(0)}',
+                                subtitle: 'Sales minus expenses',
+                                icon: Icons.trending_up_outlined,
+                                tint: const Color(0xFFFCE7F3),
+                                iconColor: AppColors.accentRose,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        _CompactSummaryStrip(
+                          totalExpenses: total,
+                          expenseCount: expenseCount,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: GlassCard(
@@ -135,6 +197,146 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SummaryStatCard extends StatelessWidget {
+  const _SummaryStatCard({
+    required this.label,
+    required this.value,
+    required this.subtitle,
+    required this.icon,
+    required this.tint,
+    required this.iconColor,
+  });
+
+  final String label;
+  final String value;
+  final String subtitle;
+  final IconData icon;
+  final Color tint;
+  final Color iconColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: tint,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: AppColors.slate400,
+              letterSpacing: 0.8,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: AppColors.slate800,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.slate500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactSummaryStrip extends StatelessWidget {
+  const _CompactSummaryStrip({
+    required this.totalExpenses,
+    required this.expenseCount,
+  });
+
+  final double totalExpenses;
+  final int expenseCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: AppColors.premiumPink.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: _stripValue(
+              label: 'Total Expenses',
+              value: 'Rs. ${totalExpenses.toStringAsFixed(0)}',
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 36,
+            color: AppColors.deepMaroon.withValues(alpha: 0.12),
+          ),
+          Expanded(
+            child: _stripValue(
+              label: 'Records',
+              value: expenseCount.toString(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _stripValue({required String label, required String value}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w800,
+            color: AppColors.slate500,
+            letterSpacing: 0.7,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+            color: AppColors.deepMaroon,
+          ),
+        ),
+      ],
     );
   }
 }

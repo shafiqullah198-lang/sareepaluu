@@ -1,73 +1,89 @@
-import 'package:flutter/foundation.dart';
 import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 
 /// Centralized API configuration.
 ///
 /// URL resolution priority:
-///   1. `--dart-define=API_BASE_URL=...` → always wins
-///   2. Platform-aware auto-detection (all platforms use production)
-///   3. Fallback to production domain
-///
-/// For physical device testing, run with:
-///   flutter run --dart-define=LOCAL_IP=192.168.18.51
+///   1. `--dart-define=API_BASE_URL=...` -> normalized to production host
+///   2. Platform-aware default -> production host
+///   3. Final fallback -> production host
 class AppConfig {
   AppConfig._();
 
-  // ── dart-define overrides ────────────────────────────────────────────────
   static const String _defineApiUrl = String.fromEnvironment('API_BASE_URL');
   static const String _defineLocalIp = String.fromEnvironment('LOCAL_IP');
 
-  // ── Default port ─────────────────────────────────────────────────────────
-  static const int _port = 8000;
+  static const String _productionOrigin = 'https://sareebypaalu.com';
+  static const String _productionHost = 'sareebypaalu.com';
   static const String _prefix = '/api/v1';
-
-  // ── Resolved base URL ────────────────────────────────────────────────────
 
   /// The resolved API base URL for the current platform / build mode.
   static String get apiBaseUrl {
-    // 1. Explicit override always wins
-    if (_defineApiUrl.isNotEmpty) return _defineApiUrl;
-
-    // 2. Physical device override
-    if (_defineLocalIp.isNotEmpty) {
-      return 'https://sareebypaalu.com$_prefix';
+    if (_defineApiUrl.isNotEmpty) {
+      return _normalizeApiBaseUrl(_defineApiUrl);
     }
 
-    // 3. Auto-detect by platform (only available in debug/profile builds)
+    if (_defineLocalIp.isNotEmpty) {
+      return _productionBaseUrl;
+    }
+
     if (kDebugMode || kProfileMode) {
       if (kIsWeb) {
-        // Chrome / Flutter Web → production domain
-        return 'https://sareebypaalu.com$_prefix';
+        return _productionBaseUrl;
       }
+
       try {
-        if (Platform.isAndroid) {
-          // Real Android device → production domain
-          return 'https://sareebypaalu.com$_prefix';
-        }
-        if (Platform.isIOS) {
-          // iOS simulator → production domain
-          return 'https://sareebypaalu.com$_prefix';
-        }
-        if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-          // Desktop → production domain
-          return 'https://sareebypaalu.com$_prefix';
+        if (Platform.isAndroid ||
+            Platform.isIOS ||
+            Platform.isWindows ||
+            Platform.isLinux ||
+            Platform.isMacOS) {
+          return _productionBaseUrl;
         }
       } catch (_) {
-        // Platform not available (e.g., web)
+        // Platform not available (for example, web).
       }
     }
 
-    // 4. Final fallback to production domain
-    return 'https://sareebypaalu.com$_prefix';
+    return _productionBaseUrl;
   }
 
-  // ── Diagnostics ───────────────────────────────────────────────────────────
+  static String get _productionBaseUrl => '$_productionOrigin$_prefix';
+
+  static String _normalizeApiBaseUrl(String rawValue) {
+    final trimmed = rawValue.trim();
+    if (trimmed.isEmpty) return _productionBaseUrl;
+
+    final parsed = Uri.tryParse(trimmed);
+    if (parsed == null) return _productionBaseUrl;
+
+    final path = _normalizedApiPath(parsed.path);
+    return Uri(
+      scheme: 'https',
+      host: _productionHost,
+      path: path,
+    ).toString();
+  }
+
+  static String _normalizedApiPath(String path) {
+    final trimmed = path.trim();
+    if (trimmed.isEmpty || trimmed == '/') return _prefix;
+
+    final normalized = trimmed.startsWith('/') ? trimmed : '/$trimmed';
+
+    if (normalized == '/api') return '/api';
+    if (normalized.startsWith('/api/')) return normalized.replaceAll(RegExp(r'/+$'), '');
+
+    return _prefix;
+  }
 
   /// Human-readable name of the current target for logging.
   static String get effectivePlatform {
-    if (_defineApiUrl.isNotEmpty) return 'custom (dart-define)';
+    if (_defineApiUrl.isNotEmpty) return 'custom (normalized to production)';
     if (_defineLocalIp.isNotEmpty) return 'physical device (production)';
     if (kIsWeb) return 'web (production)';
+
     try {
       if (Platform.isAndroid) return 'Android (production)';
       if (Platform.isIOS) return 'iOS (production)';
@@ -75,6 +91,7 @@ class AppConfig {
       if (Platform.isLinux) return 'Linux (production)';
       if (Platform.isMacOS) return 'macOS (production)';
     } catch (_) {}
+
     return 'unknown';
   }
 

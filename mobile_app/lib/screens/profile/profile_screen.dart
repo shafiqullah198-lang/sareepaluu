@@ -45,8 +45,8 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 12),
             GlassCard(
                 child: SwitchListTile(
-                    value: true,
-                    onChanged: (_) {},
+                    value: auth.authenticated,
+                    onChanged: null,
                     title: const Text('Protected API access'),
                     activeThumbColor: AppColors.premiumGold)),
             const SizedBox(height: 12),
