@@ -58,4 +58,17 @@ class CustomerProvider extends ChangeNotifier {
       return null;
     }
   }
+
+  Future<void> addCustomer(String name, String phone) async {
+    try {
+      await _api.post('/customers/', data: {
+        'name': name,
+        'phone': phone,
+      });
+      await load();
+    } catch (e) {
+      error = 'Could not add customer. Please try again.';
+      notifyListeners();
+    }
+  }
 }

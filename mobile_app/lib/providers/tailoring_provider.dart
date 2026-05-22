@@ -80,4 +80,19 @@ class TailoringProvider with ChangeNotifier {
       debugPrint('Assign darzi error: $e');
     }
   }
+
+  Future<void> addDarzi(String name, String? phone, String? address) async {
+    try {
+      await _api.post('/orders/darzis/', data: {
+        'name': name,
+        'phone': phone,
+        'address': address,
+      });
+      await load();
+    } catch (e) {
+      debugPrint('Add darzi error: $e');
+      _error = 'Could not add tailor. Please try again.';
+      notifyListeners();
+    }
+  }
 }

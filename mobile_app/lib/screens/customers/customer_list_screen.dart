@@ -37,12 +37,58 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
     context.read<SearchProvider>().setQuery(value);
   }
 
+  void _showAddCustomer(BuildContext context) {
+    final nameController = TextEditingController();
+    final phoneController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        content: GlassCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('ADD NEW CUSTOMER', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 24),
+              GlassTextField(controller: nameController, hint: 'Customer Name', icon: Icons.person_outline),
+              const SizedBox(height: 16),
+              GlassTextField(
+                controller: phoneController,
+                hint: 'Phone Number',
+                icon: Icons.phone_outlined,
+                keyboardType: TextInputType.phone,
+              ),
+              const SizedBox(height: 24),
+              GlassButton(
+                expanded: true,
+                label: 'Save Customer',
+                onPressed: () {
+                  if (nameController.text.isNotEmpty && phoneController.text.isNotEmpty) {
+                    context.read<CustomerProvider>().addCustomer(nameController.text, phoneController.text);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<CustomerProvider>();
     return PremiumPage(
       title: 'Customer Database',
       subtitle: 'Clients and purchase history.',
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddCustomer(context),
+        backgroundColor: AppColors.premiumGold,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       child: Column(
         children: [
           Padding(

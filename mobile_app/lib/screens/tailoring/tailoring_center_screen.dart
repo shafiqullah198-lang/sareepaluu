@@ -42,12 +42,67 @@ class _TailoringCenterScreenState extends State<TailoringCenterScreen> {
     context.read<SearchProvider>().setQuery(value);
   }
 
+  void _showAddDarzi(BuildContext context) {
+    final nameController = TextEditingController();
+    final phoneController = TextEditingController();
+    final addressController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        content: GlassCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('ADD NEW TAILOR', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 24),
+              GlassTextField(controller: nameController, hint: 'Tailor Name', icon: Icons.person_outline),
+              const SizedBox(height: 16),
+              GlassTextField(
+                controller: phoneController,
+                hint: 'Phone Number',
+                icon: Icons.phone_outlined,
+                keyboardType: TextInputType.phone,
+              ),
+              const SizedBox(height: 16),
+              GlassTextField(controller: addressController, hint: 'Address', icon: Icons.location_on_outlined),
+              const SizedBox(height: 24),
+              GlassButton(
+                expanded: true,
+                label: 'Save Tailor',
+                onPressed: () {
+                  if (nameController.text.isNotEmpty) {
+                    context.read<TailoringProvider>().addDarzi(
+                      nameController.text,
+                      phoneController.text.isNotEmpty ? phoneController.text : null,
+                      addressController.text.isNotEmpty ? addressController.text : null,
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TailoringProvider>();
     return PremiumPage(
       title: 'Tailoring Center',
       subtitle: 'Manage stitching statuses and darzi assignments.',
+      floatingActionButton: _tabIndex == 1
+          ? FloatingActionButton(
+              onPressed: () => _showAddDarzi(context),
+              backgroundColor: AppColors.premiumGold,
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
       child: Column(
         children: [
           _InnerTabBar(

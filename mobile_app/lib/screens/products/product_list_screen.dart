@@ -43,6 +43,42 @@ class _ProductListScreenState extends State<ProductListScreen> {
     context.read<SearchProvider>().setQuery(value);
   }
 
+  void _showAddProduct(BuildContext context) {
+    final nameController = TextEditingController();
+    final categoryController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        content: GlassCard(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('ADD NEW PRODUCT', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 24),
+              GlassTextField(controller: nameController, hint: 'Product Name', icon: Icons.shopping_bag_outlined),
+              const SizedBox(height: 16),
+              GlassTextField(controller: categoryController, hint: 'Category', icon: Icons.category_outlined),
+              const SizedBox(height: 24),
+              GlassButton(
+                expanded: true,
+                label: 'Save Product',
+                onPressed: () {
+                  if (nameController.text.isNotEmpty && categoryController.text.isNotEmpty) {
+                    context.read<CatalogProvider>().addProduct(nameController.text, categoryController.text);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final catalog = context.watch<CatalogProvider>();
@@ -52,6 +88,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return PremiumPage(
       title: 'Products',
       subtitle: 'Browse collections, manage variants, and check stock.',
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showAddProduct(context),
+        backgroundColor: AppColors.premiumGold,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
       child: Column(children: [
         _InnerTabBar(
           labels: const ['Product Catalog', 'Manage Collections'],

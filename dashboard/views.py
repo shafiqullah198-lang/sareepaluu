@@ -1,8 +1,11 @@
 from decimal import Decimal
+from urllib.parse import urlencode
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import models
+from django.db.models import ProtectedError
 from django.db.models import Sum, Count
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from datetime import timedelta, date
 from django.db.models.functions import TruncDate, ExtractMonth, ExtractDay
 from .models import Order, Product, Category, ProductVariant, Customer, OrderItem, Darzi, SubCategory, Expense, OrderPayment
@@ -24,6 +27,16 @@ def login_view(request):
 def logout_view(request):
     session_logout(request)
     return redirect('login')
+
+
+def _redirect_with_toast(request, message, toast_type='success'):
+    next_url = request.POST.get('next') or request.GET.get('next') or resolve_url('products')
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = resolve_url('products')
+
+    separator = '&' if '?' in next_url else '?'
+    query = urlencode({'toast_message': message, 'toast_type': toast_type})
+    return redirect(f'{next_url}{separator}{query}')
 
 def expenses_view(request):
     view_type = request.GET.get('view', 'monthly')
@@ -764,9 +777,22 @@ def edit_product(request, pk):
 def delete_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
-        product.delete()
-        return redirect('products')
-    return render(request, 'dashboard/product_confirm_delete.html', {'product': product})
+        try:
+            product.delete()
+            return _redirect_with_toast(request, 'Product deleted successfully', 'success')
+        except ProtectedError:
+            return _redirect_with_toast(
+                request,
+                'This product cannot be deleted because it is linked to existing orders.',
+                'error'
+            )
+        except Exception:
+            return _redirect_with_toast(
+                request,
+                'Failed to delete product. Please try again.',
+                'error'
+            )
+    return redirect('products')
 
 def manage_variants(request, product_pk):
     product = get_object_or_404(Product, pk=product_pk)

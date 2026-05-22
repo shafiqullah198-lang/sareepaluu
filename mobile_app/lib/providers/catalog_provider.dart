@@ -90,4 +90,17 @@ class CatalogProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> addProduct(String name, String categoryName) async {
+    try {
+      await _api.post('/products/', data: {
+        'name': name,
+        'category_name': categoryName,
+      });
+      await load();
+    } catch (e) {
+      error = 'Could not add product. Please try again.';
+      notifyListeners();
+    }
+  }
 }
