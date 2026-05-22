@@ -960,7 +960,7 @@
                 </div>
             </header>
 
-            {% block content %}{% endblock %}
+            
         </main>
     </div>
 
@@ -1155,56 +1155,7 @@
                 </div>
             </header>
 
-            {% block content %}{% endblock %}
-        </main>
-    </div>
 
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-    </script>
-
-    <!-- Global Toast System -->
-    <div x-data="{ 
-            toasts: [], 
-            addToast(message, type = 'success') { 
-                const id = Date.now();
-                this.toasts.push({ id, message, type });
-                setTimeout(() => {
-                    this.toasts = this.toasts.filter(t => t.id !== id);
-                }, 5000);
-            } 
-        }" @toast.window="addToast($event.detail.message, $event.detail.type)"
-        class="fixed bottom-8 right-8 z-[100] space-y-4 w-80">
-
-        <template x-for="toast in toasts" :key="toast.id">
-            <div x-transition:enter="transition ease-out duration-300"
-                x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"
-                x-transition:enter-end="opacity-100 transform translate-y-0 scale-100"
-                x-transition:leave="transition ease-in duration-200"
-                x-transition:leave-start="opacity-100 transform translate-y-0 scale-100"
-                x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"
-                class="glass-card p-4 shadow-2xl border-white/60 flex items-center gap-4 bg-white/90"
-                :class="{ 'border-l-4 border-l-premium-gold': toast.type === 'success', 'border-l-4 border-l-red-400': toast.type === 'error' }">
-
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                    :class="{ 'bg-premium-pink/30 text-premium-gold': toast.type === 'success', 'bg-red-50 text-red-400': toast.type === 'error' }">
-                    <i :data-lucide="toast.type === 'success' ? 'check-circle' : 'alert-circle'" class="w-6 h-6"></i>
-                </div>
-
-                <div>
-                    <h5 class="text-xs font-bold text-slate-800 uppercase tracking-widest"
-                        x-text="toast.type === 'success' ? 'Success' : 'Attention'"></h5>
-                    <p class="text-xs text-slate-500 font-medium mt-0.5" x-text="toast.message"></p>
-                </div>
-
-                <button @click="toasts = toasts.filter(t => t.id !== toast.id)"
-                    class="ml-auto text-slate-300 hover:text-slate-500">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
-        </template>
-    </div>
 
     <style>
         @keyframes modalSlideUp {
